@@ -1015,21 +1015,30 @@
         </div>
       </div>
 
-      <!-- Footer -->
-      <div class="footer-card">
-          <div class="footer-content">
-              <p class="footer-title">© 2025  د.اسماء خنفر - جميع الحقوق محفوظة</p>
-              <p class="footer-subtitle">نقدم طب و جراحة الفم و الاسنان
-</p>
-              <div class="footer-status"><div class="status-dot-small"></div><span>متاح للتواصل والدعم</span></div>
-          </div>
-      </div>
+     <!-- Footer -->
+<div class="footer-card">
+    <div class="footer-content">
+        <p class="footer-title">© <span id="current-year"></span> د.اسماء خنفر - جميع الحقوق محفوظة</p>
+        <p class="footer-subtitle">نقدم طب و جراحة الفم و الاسنان</p>
+        <div class="footer-status">
+            <div class="status-dot-small"></div>
+            <span>متاح للتواصل والدعم</span>
+        </div>
+    </div>
+</div>
 
       <!-- Floating WhatsApp Button -->
       <div class="floating-whatsapp">
           <a href="https://wa.me/972597935972" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i></a>
       </div>
 
+
+<script>
+    // تعيين السنة الحالية تلقائيًا
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+</script>
+
+      
       <!-- Inline JS -->
       <script>
       // Wait for DOM to be fully loaded
@@ -1237,3 +1246,4 @@
 </body>
 
 </html>
+
