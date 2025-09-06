@@ -1231,7 +1231,38 @@
         }
       });
       </script>
+      <script>
+  const swiper = new Swiper(".swiper", {
+    loop: true,
+    centeredSlides: true,
+    slidesPerView: 1.2, // عدد البطاقات المرئية، أقل من 2 لظهور جزء من البطاقات المجاورة
+    spaceBetween: 20, // المسافة بين البطاقات
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
+    breakpoints: {
+      640: {      // من 640px وما فوق
+        slidesPerView: 1.5,
+        spaceBetween: 20,
+      },
+      768: {      // من 768px وما فوق
+        slidesPerView: 2,
+        spaceBetween: 25,
+      },
+      1024: {     // من 1024px وما فوق
+        slidesPerView: 3,
+        spaceBetween: 30,
+      },
+    },
+  });
+</script>
       <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     </div>
 </body>
+
 </html>
