@@ -1,0 +1,1237 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <!-- Swiper -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>د. أسماء هارون خنفر | طب وجراحة الفم والأسنان | عيادة أسنان في رام الله</title>
+<meta name="description" content="د. أسماء هارون خنفر، طبيبة متخصصة في طب وجراحة الفم والأسنان، تقدم خدمات التقويم، التبييض، الحشوات، تنظيف الأسنان وعلاجات شاملة بأحدث التقنيات في عيادة رام الله." />
+<meta name="keywords" content="د. أسماء هارون خنفر, عيادة أسنان رام الله, طب الأسنان, جراحة الفم, تقويم الأسنان, تبييض الأسنان, تنظيف الأسنان, حشوات الأسنان" />
+  <meta name="theme-color" content="#3b82f6" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    /* أنماط CSS الحالية تبقى كما هي */
+    /* Reset and Base Styles */
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+    }
+    body{
+        font-family:'Cairo',sans-serif;
+        background:linear-gradient(135deg,#f8fafc 0%,#e0f2fe 50%,#e0e7ff 100%);
+        color:#1e293b;
+        min-height:100vh;
+        line-height:1.6;
+        direction:rtl;
+        text-align:right;
+    }
+
+    /* Background Pattern */
+    .bg-pattern{
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        opacity:.03;
+        background-image:radial-gradient(circle at 25px 25px,#3b82f6 2px,transparent 0);
+        background-size:50px 50px;
+        pointer-events:none;
+        z-index:-1;
+    }
+
+    /* Container */
+    .container{
+        max-width:1024px;
+        margin:0 auto;
+        padding:2rem 1rem;
+    }
+
+    /* Animations */
+    @keyframes fadeIn{
+        from{opacity:0;transform:translateY(30px);}
+        to{opacity:1;transform:translateY(0);}
+    }
+    @keyframes pulse{
+        0%,100%{opacity:1;}
+        50%{opacity:.5;}
+    }
+    @keyframes float{
+        0%,100%{transform:translateY(0);}
+        50%{transform:translateY(-10px);}
+    }
+    .fade-in{
+        animation:fadeIn 1s ease-out;
+    }
+
+    /* Header Card */
+    .header-card{
+        background:rgba(255,255,255,.9);
+        backdrop-filter:blur(20px);
+        border-radius:24px;
+        overflow:hidden;
+        box-shadow:0 20px 40px rgba(0,0,0,.1);
+        margin-bottom:2rem;
+        position:relative;
+        border:1px solid rgba(255,255,255,.2);
+    }
+    .header-bg{
+        position:absolute;
+        inset:0;
+        background:linear-gradient(135deg,#3b82f6 0%,#6366f1 50%,#3b82f6 100%);
+    }
+    .header-bg::after{
+        content:'';
+        position:absolute;
+        inset:0;
+        background:rgba(0,0,0,.1);
+    }
+    .header-content{
+        position:relative;
+        z-index:2;
+        padding:3rem 2rem;
+        color:#fff;
+    }
+
+    /* Profile Section */
+    .profile-section{
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        gap:2rem;
+        margin-bottom:3rem;
+    }
+    .avatar-container{position:relative;}
+    .avatar{
+        width:8rem;
+        height:8rem;
+        background:rgba(255,255,255,.2);
+        border-radius:50%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        backdrop-filter:blur(10px);
+        border:4px solid rgba(255,255,255,.3);
+        box-shadow:0 10px 30px rgba(0,0,0,.2);
+    }
+    .avatar-emoji{font-size:3rem;}
+    .status-indicator{
+        position:absolute;
+        bottom:-8px;
+        right:-8px;
+        width:2rem;
+        height:2rem;
+        background:#10b981;
+        border-radius:50%;
+        border:4px solid #fff;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+    }
+    .status-dot{
+        width:.75rem;
+        height:.75rem;
+        background:#fff;
+        border-radius:50%;
+        animation:pulse 2s infinite;
+    }
+    .profile-info{text-align:center;flex:1;}
+    .doctor-name{
+        font-size:2.5rem;
+        font-weight:700;
+        margin-bottom:.5rem;
+        text-shadow:0 2px 4px rgba(0,0,0,.1);
+    }
+    .doctor-title{
+        font-size:1.5rem;
+        color:rgba(255,255,255,.9);
+        margin-bottom:1rem;
+        font-weight:500;
+    }
+    .doctor-description{
+        font-size:1.1rem;
+        color:rgba(255,255,255,.8);
+        line-height:1.8;
+        max-width:600px;
+        margin:0 auto 1.5rem;
+    }
+    .location{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:.5rem;
+        color:rgba(255,255,255,.9);
+        font-size:1rem;
+    }
+
+    /* Stats Grid */
+    .stats-grid{
+        display:grid;
+        grid-template-columns:repeat(3,1fr);
+        gap:2rem;
+    }
+    .stat-item{text-align:center;}
+    .stat-icon{
+        width:4rem;
+        height:4rem;
+        background:rgba(255,255,255,.2);
+        border-radius:16px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        margin:0 auto 1rem;
+        backdrop-filter:blur(10px);
+        font-size:1.5rem;
+    }
+    .stat-number{
+        font-size:1.75rem;
+        font-weight:700;
+        margin-bottom:.5rem;
+    }
+    .stat-label{
+        font-size:.9rem;
+        color:rgba(255,255,255,.8);
+    }
+    /* Contact Links */
+    .contact-links{
+        display:grid;
+        gap:1.5rem;
+        margin-bottom:2rem;
+    }
+    .contact-card{
+        background:#fff;
+        border-radius:20px;
+        overflow:hidden;
+        box-shadow:0 10px 30px rgba(0,0,0,.1);
+        cursor:pointer;
+        transition:all .3s cubic-bezier(.4,0,.2,1);
+        border:1px solid rgba(255,255,255,.2);
+    }
+    .contact-card:hover{
+        transform:translateY(-4px) scale(1.02);
+        box-shadow:0 20px 40px rgba(0,0,0,.15);
+    }
+    .contact-content{
+        padding:1.5rem 2rem;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        color:#fff;
+        position:relative;
+        overflow:hidden;
+    }
+    .contact-left{
+        display:flex;
+        align-items:center;
+        gap:1.5rem;
+    }
+    .contact-icon{
+        width:3.5rem;
+        height:3.5rem;
+        background:rgba(255,255,255,.2);
+        border-radius:16px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        backdrop-filter:blur(10px);
+        font-size:1.5rem;
+        transition:all .3s ease;
+    }
+    .contact-card:hover .contact-icon{
+        background:rgba(255,255,255,.3);
+        transform:scale(1.1);
+    }
+    .contact-text h3{
+        font-size:1.25rem;
+        font-weight:600;
+        margin-bottom:.25rem;
+    }
+    .contact-text p{font-size:.9rem;opacity:.9;}
+    .contact-arrow{
+        font-size:1.25rem;
+        opacity:.8;
+        transition:all .3s ease;
+    }
+    .contact-card:hover .contact-arrow{
+        opacity:1;
+        transform:translateX(-4px);
+    }
+    /* Contact Card Colors */
+    .phone-card .contact-content{background:linear-gradient(135deg,#10b981 0%,#059669 100%);}
+    .whatsapp-card .contact-content{background:linear-gradient(135deg,#22c55e 0%,#16a34a 100%);}
+    .email-card .contact-content{background:linear-gradient(135deg,#3b82f6 0%,#2563eb 100%);}
+    .instagram-card .contact-content{background:linear-gradient(135deg,#ec4899 0%,#be185d 100%);}
+    .facebook-card .contact-content{background:linear-gradient(135deg,#6366f1 0%,#4f46e5 100%);}
+    .snapchat-card .contact-content{background:linear-gradient(135deg,#fffc00 0%,#ffb300 100%);}
+    .tiktok-card .contact-content{background:linear-gradient(135deg,#000000 0%,#ff0050 100%);}
+
+    /* خريطة الموقع - جديد */
+    .map-section {
+      margin: 3rem 0;
+      animation: fadeIn 1s ease-out;
+    }
+    
+    .map-card {
+      background: #fff;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .map-header {
+      background: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #3b82f6 100%);
+      padding: 1.5rem 2rem;
+      color: #fff;
+      text-align: center;
+    }
+    
+    .map-header h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .map-header p {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+    
+    .map-container {
+      height: 400px;
+      width: 100%;
+      position: relative;
+    }
+    
+    .map-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    
+    .leaflet-container {
+      height: 100%;
+      width: 100%;
+      border-radius: 0 0 24px 24px;
+    }
+    
+    .map-overlay {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      max-width: 300px;
+      z-index: 1000;
+    }
+    
+    .map-overlay h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #1e293b;
+    }
+    
+    .map-overlay p {
+      font-size: 0.9rem;
+      color: #64748b;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .map-overlay a {
+      display: inline-block;
+      margin-top: 0.5rem;
+      color: #3b82f6;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+    
+    .map-overlay a:hover {
+      text-decoration: underline;
+    }
+    
+    .map-error {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 2rem;
+      text-align: center;
+      color: #64748b;
+    }
+    
+    .map-error i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #ef4444;
+    }
+    
+    .map-error p {
+      margin-bottom: 1rem;
+    }
+    
+    @media (max-width: 768px) {
+      .map-container {
+        height: 300px;
+      }
+      
+      .map-overlay {
+        bottom: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+      }
+    }
+
+    /* Footer */
+    .footer-card{
+        background:linear-gradient(135deg,#f8fafc 0%,#e2e8f0 100%);
+        border-radius:20px;
+        padding:2rem;
+        text-align:center;
+        box-shadow:0 10px 30px rgba(0,0,0,.05);
+        border:1px solid rgba(255,255,255,.2);
+    }
+    .footer-title{
+        font-size:1.1rem;
+        font-weight:600;
+        color:#374151;
+        margin-bottom:.5rem;
+    }
+    .footer-subtitle{
+        font-size:.9rem;
+        color:#6b7280;
+        margin-bottom:1rem;
+    }
+    .footer-status{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:.5rem;
+        font-size:.8rem;
+        color:#9ca3af;
+    }
+    .status-dot-small{
+        width:.5rem;
+        height:.5rem;
+        background:#10b981;
+        border-radius:50%;
+        animation:pulse 2s infinite;
+    }
+
+    /* Floating WhatsApp Button */
+    .floating-whatsapp{
+        position:fixed;
+        bottom:1.5rem;
+        left:1.5rem;
+        z-index:1000;
+    }
+    .floating-whatsapp a{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        width:3.5rem;
+        height:3.5rem;
+        background:linear-gradient(135deg,#22c55e 0%,#16a34a 100%);
+        border-radius:50%;
+        color:#fff;
+        text-decoration:none;
+              font-size:1.5rem;
+        box-shadow:0 10px 30px rgba(34,197,94,.4);
+        transition:all .3s cubic-bezier(.4,0,.2,1);
+        animation:float 3s ease-in-out infinite;
+    }
+    .floating-whatsapp a:hover{
+        transform:scale(1.1);
+        box-shadow:0 15px 40px rgba(34,197,94,.6);
+    }
+    /* Responsive Design */
+    @media(min-width:768px){
+        .container{padding:3rem 2rem;}
+        .profile-section{flex-direction:row;text-align:right;}
+        .profile-info{text-align:right;}
+        .avatar{width:10rem;height:10rem;}
+        .avatar-emoji{font-size:4rem;}
+        .doctor-name{font-size:3rem;}
+        .doctor-title{font-size:1.75rem;}
+        .stats-grid{gap:3rem;}
+        .stat-icon{width:5rem;height:5rem;font-size:2rem;}
+        .stat-number{font-size:2rem;}
+        .contact-content{padding:2rem 2.5rem;}
+        .contact-icon{width:4rem;height:4rem;font-size:1.75rem;}
+        .floating-whatsapp{bottom:2rem;left:2rem;}
+        .floating-whatsapp a{width:4rem;height:4rem;font-size:1.75rem;}
+    }
+    @media(max-width:640px){
+        .container{padding:1rem;}
+        .header-content{padding:2rem 1.5rem;}
+        .stats-grid{gap:1rem;}
+        .stat-icon{width:3rem;height:3rem;font-size:1.25rem;}
+        .stat-number{font-size:1.5rem;}
+        .contact-content{padding:1.25rem 1.5rem;}
+        .contact-icon{width:3rem;height:3rem;font-size:1.25rem;}
+        .contact-left{gap:1rem;}
+        .doctor-name{font-size:2rem;}
+        .doctor-title{font-size:1.25rem;}
+        .doctor-description{font-size:1rem;}
+    }
+
+    /* Smooth Scrolling */
+    html{scroll-behavior:smooth;}
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar{width:8px;}
+    ::-webkit-scrollbar-track{background:#f1f5f9;}
+    ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px;}
+    ::-webkit-scrollbar-thumb:hover{background:#94a3b8;}
+
+    /* Focus Styles for Accessibility */
+    .contact-card:focus-visible,
+    .floating-whatsapp a:focus-visible{
+        outline:2px solid #3b82f6;
+        outline-offset:2px;
+    }
+
+    /* السلايدر - التعديلات الجديدة */
+    .swiper {
+      width: 100%;
+      padding: 2rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* تلاشي أبيض يمين ويسار */
+    .swiper::before,
+    .swiper::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 80px;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .swiper::before {
+      left: 0;
+      background: linear-gradient(to right, #fff, transparent);
+    }
+    .swiper::after {
+      right: 0;
+      background: linear-gradient(to left, #fff, transparent);
+    }
+
+    /* البطاقة - تحسين التصميم */
+    .product-card {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      width: 100%;
+      height: 380px;
+      transition: transform 0.4s ease, box-shadow 0.4s ease, opacity 0.4s ease;
+      opacity: 0.7;
+      background: #fff;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    /* الصورة تغطي البطاقة كاملة */
+    .product-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    /* تدرج أسفل - تحسين اللون */
+    .product-card::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60%;
+      background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0));
+      z-index: 1;
+    }
+
+    /* محتوى البطاقة فوق الصورة */
+    .product-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1.5rem;
+      z-index: 2;
+      text-align: center;
+      color: #fff;
+    }
+
+    .product-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 0.75rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .price-container {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      align-items: center;
+    }
+
+    .original-price {
+      text-decoration: line-through;
+      font-size: 1rem;
+      color: #e5e7eb;
+    }
+    .discounted-price {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #60a5fa;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .product-link {
+      display: inline-block;
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      padding: 0.75rem 1.5rem;
+      border-radius: 12px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .product-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.5);
+    }
+
+    /* خصم - تحسين التصميم */
+    .discount-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: #fff;
+      z-index: 3;
+      box-shadow: 0 4px 10px rgba(220, 38, 38, 0.3);
+    }
+
+    /* البطاقة الوسط - تحسين التأثير */
+    .swiper-slide {
+      transition: transform 0.4s ease, opacity 0.4s ease;
+    }
+    .swiper-slide-active .product-card {
+      transform: scale(1.08);
+      opacity: 1;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    }
+    
+    .swiper-slide-active .product-card img {
+      transform: scale(1.05);
+    }
+
+    /* الأسهم - تحسين كبير */
+    .swiper-button-next,
+    .swiper-button-prev {
+      color: #fff;
+      width: 50px;
+      height: 50px;
+      background: rgba(59, 130, 246, 0.9);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+          z-index: 99;
+    }
+
+    .swiper-button-next:after,
+    .swiper-button-prev:after {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .swiper-button-next:hover,
+    .swiper-button-prev:hover {
+      background: rgba(37, 99, 235, 0.95);
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.5);
+    }
+
+    /* النقاط (pagination) - تحسين */
+    .swiper-pagination {
+      bottom: 10px !important;
+    }
+    .swiper-pagination-bullet {
+      background: #cbd5e1;
+      opacity: 0.7;
+      width: 10px;
+      height: 10px;
+      transition: all 0.3s ease;
+    }
+    .swiper-pagination-bullet-active {
+      background: #3b82f6;
+      opacity: 1;
+      width: 20px;
+      border-radius: 10px;
+    }
+    
+     /* عنوان السلايدر - جديد */
+    .slider-header {
+      text-align: center;
+      margin: 3rem 0 2rem;
+      animation: fadeIn 1s ease-out;
+    }
+    
+    .slider-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 1rem;
+      position: relative;
+      display: inline-block;
+    }
+    
+    .slider-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      right: 50%;
+      transform: translateX(50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      border-radius: 2px;
+    }
+    
+    .slider-subtitle {
+      font-size: 1.1rem;
+      color: #64748b;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    
+    @media (max-width: 768px) {
+      .slider-title {
+        font-size: 1.8rem;
+      }
+      
+      .slider-subtitle {
+        font-size: 1rem;
+        padding: 0 1rem;
+      }
+    }
+    /* صورة الخلفية العلوية */
+.avatar-bg-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+.avatar-bg-overlay::before,
+.avatar-bg-overlay::after {
+    content: "";
+    position: absolute;
+    right: 0; top: 0; width: 100%; height: 100%;
+    background-image: url("https://cdn.alweb.com/thumbs/webtebpro/userprofile/fit385x289/b/9/b45e96bd-939c-47dc-adf6-5db3322200af.webp");
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    animation: avatarBgFadeIn 2s 0.3s cubic-bezier(.4,0,.2,1) forwards;
+    mask-image: radial-gradient(ellipse 100% 100% at 100% 0%, black 70%, transparent);
+    -webkit-mask-image: radial-gradient(ellipse 100% 100% at 100% 0%, black 70%, transparent);
+}
+.avatar-bg-overlay::after {
+    left: 0; filter: blur(14px) brightness(1.2);
+    opacity: 0;
+    animation: avatarBgBlurIn 1.8s 0.3s cubic-bezier(.4,0,.2,1) forwards;
+}
+
+@keyframes avatarBgFadeIn {
+    to { opacity: .22; height: 110%; }
+}
+@keyframes avatarBgBlurIn {
+    to { opacity: .18; height: 110%; }
+}
+    
+/* حركة الخلفية */
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* كروت مع 3 ألوان */
+.phone-card .contact-content {
+  background: linear-gradient(135deg,#10b981,#059669,#10b981);
+  background-size: 300% 300%;
+  animation: gradientMove 6s ease infinite;
+}
+.whatsapp-card .contact-content {
+  background: linear-gradient(135deg,#22c55e,#16a34a,#22c55e);
+  background-size: 300% 300%;
+  animation: gradientMove 6s ease infinite;
+}
+.email-card .contact-content {
+  background: linear-gradient(135deg,#3b82f6,#2563eb,#3b82f6);
+  background-size: 300% 300%;
+  animation: gradientMove 6s ease infinite;
+}
+.instagram-card .contact-content {
+  background: linear-gradient(135deg,#ec4899,#be185d,#ec4899);
+  background-size: 300% 300%;
+  animation: gradientMove 6s ease infinite;
+}
+.facebook-card .contact-content {
+  background: linear-gradient(135deg,#6366f1,#4f46e5,#6366f1);
+  background-size: 300% 300%;
+  animation: gradientMove 6s ease infinite;
+}
+.snapchat-card .contact-content {
+  background: linear-gradient(135deg,#fffc00,#ffb300,#fffc00);
+  background-size: 300% 300%;
+  animation: gradientMove 6s ease infinite;
+}
+.tiktok-card .contact-content {
+  background: linear-gradient(135deg,#000000,#ff0050,#000000);
+  background-size: 300% 300%;
+  animation: gradientMove 6s ease infinite;
+}
+
+
+  </style>
+</head>
+<body>
+    <!-- Background Pattern -->
+    <div class="bg-pattern"></div>
+
+    <div class="container" id="main-content">
+      <!-- Header Card -->
+   <div class="header-card fade-in">
+            <div class="header-bg"><div class="avatar-bg-overlay"></div></div>
+            <div class="header-content">
+                <div class="profile-section">
+                    <div class="avatar-container" style="position: relative;">
+                        <div class="avatar" style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                            <img src="https://www.palmedicine.com/wp-content/uploads/2024/07/Artboard-2-2048x2048.png" alt="د.أسماء هارون خنفر" style="width:100%; height:100%; object-fit: cover;">
+                        </div>
+                        <div class="status-indicator" style="position: absolute; bottom:4px; right:4px; width:16px; height:16px; background-color:#00c853; border:2px solid #fff; border-radius:50%;"></div>
+                    </div>
+                    <div class="profile-info">
+                        <h1 class="doctor-name">د.أسماء هارون خنفر</h1>
+                        <p class="doctor-title">طب و جراحة الفم و الاسنان</p>
+                        <p class="doctor-description">عِيادة أسنان في رام الله</p>
+                        <div class="location">
+                            <i class="fas fa-map-marker-alt"></i> <span>رام الله - فلسطين</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item"><div class="stat-icon"><i class="fas fa-heart"></i></div><div class="stat-number">750+</div><div class="stat-label">عميل راضي</div></div>
+                    <div class="stat-item"><div class="stat-icon"><i class="fas fa-star"></i></div><div class="stat-number">+5</div><div class="stat-label">سنوات خبرة</div></div>
+                    <div class="stat-item"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-number">24/7</div><div class="stat-label">دعم فني</div></div>
+                </div>
+            </div>
+        </div>
+
+
+      
+       <!-- عنوان السلايدر - جديد -->
+      <div class="slider-header">
+        <h2 class="slider-title">بعض أعمالنا ومنتجاتنا</h2>
+        <p class="slider-subtitle">استعرض مجموعة من منتجاتنا وخدماتنا المميزة المصممة خصيصاً لتلبية احتياجاتك التقنية</p>
+      </div>
+
+      
+      <!-- السلايدر -->
+      <div class="swiper">
+        <div class="swiper-wrapper">
+          
+          <!-- بطاقة 1 -->
+      <!-- بطاقة 1 -->
+        <div class="swiper-slide">
+            <div class="product-card">
+               
+                <img src="https://blog.ajsrp.com/wp-content/uploads/2024/11/%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9-%D8%A7%D9%84%D9%81%D9%85-%D9%88%D8%A7%D9%84%D9%81%D9%83.jpg" alt="">
+              
+            </div>
+        </div>
+        <!-- بطاقة 2 -->
+        <div class="swiper-slide">
+            <div class="product-card">
+             
+                <img src="https://tse4.mm.bing.net/th/id/OIP.aPm6IaA2oZqzfVXr8ZG3bwHaFj?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="">
+            
+            </div>
+        </div>
+        <!-- بطاقة 3 -->
+        <div class="swiper-slide">
+            <div class="product-card">
+
+                <img src="https://ridentdental.com/wp-content/uploads/2021/09/%D8%AA%D9%82%D9%88%D9%8A%D9%85-%D8%A7%D9%84%D8%A7%D8%B3%D9%86%D8%A7%D9%86-1.jpg" alt="">
+                
+            </div>
+        </div>
+        <!-- بطاقة 4 -->
+        <div class="swiper-slide">
+            <div class="product-card">
+        
+                <img src="https://jalees.7awi.com/wp-content/uploads/2023/04/zvuUVlW1.jpg" alt="">
+                
+            </div>
+        </div>
+        <!-- بطاقة 5 -->
+        <div class="swiper-slide">
+            <div class="product-card">
+              
+                <img src="https://mir-s3-cdn-cf.behance.net/project_modules/hd_webp/b1fcc5222829467.67eda9cf9ab02.png" alt="">
+              
+            </div>
+        </div>
+          
+          
+        </div>
+
+        <!-- الأسهم -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+
+        <!-- النقاط -->
+        <div class="swiper-pagination"></div>
+      </div>
+
+      <!-- Contact Links -->
+      <div class="contact-links">
+        
+        
+        
+          <a class="contact-card phone-card" data-href="tel:0597935972">
+              <div class="contact-content">
+                  <div class="contact-left">
+                      <div class="contact-icon"><i class="fas fa-phone"></i></div>
+                      <div class="contact-text"><h3>اتصال مباشر</h3><p>059-793-5972</p></div>
+                  </div>
+                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
+              </div>
+          </a>
+
+          <a class="contact-card whatsapp-card" data-href="https://wa.me/972597935972">
+              <div class="contact-content">
+                  <div class="contact-left">
+                      <div class="contact-icon"><i class="fab fa-whatsapp"></i></div>
+                      <div class="contact-text"><h3>واتساب</h3><p>تواصل فوري</p></div>
+                  </div>
+                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
+              </div>
+          </a>
+
+          <a class="contact-card email-card" data-href="mailto:dr.asmaa.khanfar@gmail.com">
+              <div class="contact-content">
+                  <div class="contact-left">
+                      <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                      <div class="contact-text"><h3>البريد الإلكتروني</h3><p>راسلنا لأي استفسار</p></div>
+                  </div>
+                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
+              </div>
+          </a>
+
+          <a class="contact-card instagram-card" data-href="https://www.instagram.com/dr.asmaa.khanfar">
+              <div class="contact-content">
+                  <div class="contact-left">
+                      <div class="contact-icon"><i class="fab fa-instagram"></i></div>
+                      <div class="contact-text"><h3>انستغرام</h3><p>تابع آخر المشاريع</p></div>
+                  </div>
+                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
+              </div>
+          </a>
+
+      
+        
+         <a class="contact-card snapchat-card" data-href="https://www.snapchat.com/add/drasmaakhanfar">
+        <div class="contact-content">
+            <div class="contact-left">
+                <div class="contact-icon"><i class="fab fa-snapchat"></i></div>
+                <div class="contact-text"><h3>سناب شات</h3><p>@drasmaakhanfar</p></div>
+            </div>
+            <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
+        </div>
+    </a>
+          <a class="contact-card facebook-card" data-href="https://www.facebook.com/profile.php?id=61550522477535">
+              <div class="contact-content">
+                  <div class="contact-left">
+                      <div class="contact-icon"><i class="fab fa-facebook-f"></i></div>
+                      <div class="contact-text"><h3>فيسبوك</h3><p>تابعنا للجديد</p></div>
+                  </div>
+                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
+              </div>
+          </a>
+      </div>
+
+      <!-- خريطة الموقع - جديد -->
+      <div class="map-section">
+        <div class="map-card">
+          <div class="map-header">
+            <h2>موقعنا الجغرافي</h2>
+            <p>زورونا في معرضنا في بيت لحم</p>
+          </div>
+          <div class="map-container">
+            <div id="map" style="height: 100%; width: 100%;"></div>
+            <div class="map-overlay">
+              <h3> د.اسماء خنفر</h3>
+              <p><i class="fas fa-map-marker-alt"></i> بيت لحم  ، عمارة النخلة</p>
+              <p><i class="fas fa-clock"></i> الأحد - الخميس: 9 ص - 6 م</p>
+              <p><i class="fas fa-phone"></i> 059-793-5972</p>
+              <a href="https://www.google.com/maps/search/?api=1&query=31.9025,35.2062" target="_blank">فتح في Google Maps</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer-card">
+          <div class="footer-content">
+              <p class="footer-title">© 2025  د.اسماء خنفر - جميع الحقوق محفوظة</p>
+              <p class="footer-subtitle">نقدم طب و جراحة الفم و الاسنان
+</p>
+              <div class="footer-status"><div class="status-dot-small"></div><span>متاح للتواصل والدعم</span></div>
+          </div>
+      </div>
+
+      <!-- Floating WhatsApp Button -->
+      <div class="floating-whatsapp">
+          <a href="https://wa.me/972597935972" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i></a>
+      </div>
+
+      <!-- Inline JS -->
+      <script>
+      // Wait for DOM to be fully loaded
+      document.addEventListener('DOMContentLoaded', function () {
+          initializeAnimations();
+          handleContactClicks();
+          handleScrollAnimations();
+          addHoverEffects();
+          handleResponsive();
+          initializeMap();
+      });
+
+      // Initialize page animations
+      function initializeAnimations() {
+          const contactCards = document.querySelectorAll('.contact-card');
+          contactCards.forEach((card, index) => {
+              card.style.opacity = '0';
+              card.style.transform = 'translateY(30px)';
+              setTimeout(() => {
+                  card.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                  card.style.opacity = '1';
+                  card.style.transform = 'translateY(0)';
+              }, 200 + index * 100);
+          });
+          
+          const mapSection = document.querySelector('.map-section');
+          if (mapSection) {
+              mapSection.style.opacity = '0';
+              mapSection.style.transform = 'translateY(30px)';
+              setTimeout(() => {
+                  mapSection.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                  mapSection.style.opacity = '1';
+                  mapSection.style.transform = 'translateY(0)';
+              }, 600);
+          }
+          
+          const footer = document.querySelector('.footer-card');
+          if (footer) {
+              footer.style.opacity = '0';
+              footer.style.transform = 'translateY(30px)';
+              setTimeout(() => {
+                  footer.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                  footer.style.opacity = '1';
+                  footer.style.transform = 'translateY(0)';
+              }, 800);
+          }
+      }
+
+      // Handle contact card clicks
+      function handleContactClicks() {
+          document.querySelectorAll('.contact-card').forEach(card => {
+              card.addEventListener('click', function (e) {
+                  e.preventDefault();
+                  const href = this.getAttribute('data-href');
+                  if (!href) return;
+                  if (href.startsWith('http')) {
+                      window.open(href, '_blank', 'noopener,noreferrer');
+                  } else {
+                      window.location.href = href;
+                  }
+              });
+
+              card.addEventListener('keydown', function (e) {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      this.click();
+                  }
+              });
+
+              card.setAttribute('tabindex', '0');
+              card.setAttribute('role', 'button');
+          });
+      }
+
+      // Handle scroll animations
+      function handleScrollAnimations() {
+          const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+          const observer = new IntersectionObserver(entries => {
+              entries.forEach(entry => {
+                  if (entry.isIntersecting) entry.target.classList.add('animate-in');
+              });
+          }, observerOptions);
+          document.querySelectorAll('.contact-card, .map-section, .footer-card').forEach(el => observer.observe(el));
+      }
+
+      // Add enhanced hover effects
+      function addHoverEffects() {
+          const contactCards = document.querySelectorAll('.contact-card');
+          contactCards.forEach(card => {
+              card.addEventListener('mouseenter', function () {
+                  this.style.transform = 'translateY(-4px) scale(1.02)';
+                  const arrow = this.querySelector('.contact-arrow');
+                  if (arrow) arrow.style.transform = 'translateX(-4px)';
+                  createRippleEffect(this);
+              });
+              card.addEventListener('mouseleave', function () {
+                  this.style.transform = '';
+                  const arrow = this.querySelector('.contact-arrow');
+                  if (arrow) arrow.style.transform = '';
+              });
+          });
+          const floatingBtn = document.querySelector('.floating-whatsapp a');
+          if (floatingBtn) {
+              floatingBtn.addEventListener('mouseenter', function () { this.style.transform = 'scale(1.1) rotate(5deg)'; });
+              floatingBtn.addEventListener('mouseleave', function () { this.style.transform = ''; });
+          }
+      }
+
+      // Create ripple effect
+      function createRippleEffect(element) {
+          const ripple = document.createElement('div');
+          ripple.style.position = 'absolute';
+          ripple.style.borderRadius = '50%';
+          ripple.style.background = 'rgba(255, 255, 255, 0.3)';
+          ripple.style.transform = 'scale(0)';
+          ripple.style.animation = 'ripple 0.6s linear';
+          ripple.style.left = '50%';
+          ripple.style.top = '50%';
+          ripple.style.width = '20px';
+          ripple.style.height = '20px';
+          ripple.style.marginLeft = '-10px';
+          ripple.style.marginTop = '-10px';
+          ripple.style.pointerEvents = 'none';
+          element.style.position = 'relative';
+          element.appendChild(ripple);
+          setTimeout(() => ripple.remove(), 600);
+      }
+
+      // Handle responsive behavior
+      function handleResponsive() {
+          let resizeTimer;
+          window.addEventListener('resize', function () {
+              clearTimeout(resizeTimer);
+              resizeTimer = setTimeout(handleScrollAnimations, 250);
+          });
+      }
+
+      // Initialize Map
+      function initializeMap() {
+          try {
+              // إحداثيات رام الله التقريبية
+              const latitude = 31.9025;
+              const longitude = 35.2062;
+              
+              // إنشاء الخريطة باستخدام Leaflet
+              const map = L.map('map').setView([latitude, longitude], 15);
+              
+              // إضافة طبقة الخريطة من OpenStreetMap
+              L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              }).addTo(map);
+              
+              // إضافة علامة للموقع
+              const marker = L.marker([latitude, longitude]).addTo(map);
+              marker.bindPopup("<b>د.اسماء خنفر  </b><br>بيت لحم فلسطين").openPopup();
+              
+          } catch (error) {
+              console.error('Error initializing map:', error);
+              const mapContainer = document.getElementById('map');
+              if (mapContainer) {
+                  mapContainer.innerHTML = `
+                      <div class="map-error">
+                          <i class="fas fa-map-marked-alt"></i>
+                          <p>عذراً، تعذر تحميل الخريطة</p>
+                          <p>يمكنك <a href="https://www.google.com/maps/search/?api=1&query=31.9025,35.2062" target="_blank">النقر هنا</a> لفتح الخريطة في نافذة جديدة</p>
+                      </div>
+                  `;
+              }
+          }
+      }
+
+      // Add CSS animation for ripple effect
+      const styleEl = document.createElement('style');
+      styleEl.textContent = `
+      @keyframes ripple { to { transform: scale(4); opacity: 0 } }
+      .animate-in { animation: slideInUp 0.6s cubic-bezier(.4,0,.2,1) forwards }
+      @keyframes slideInUp { from { opacity: 0; transform: translateY(30px) } to { opacity: 1; transform: translateY(0) } }
+      `;
+      document.head.appendChild(styleEl);
+      </script>
+      <script>
+      const swiper = new Swiper('.swiper', {
+        slidesPerView: 1.2,
+        centeredSlides: true,
+        spaceBetween: 40, // مسافة أكبر بين البطاقات
+        loop: true,
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+        },
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+        breakpoints: {
+          480: { slidesPerView: 1.5, spaceBetween: 30 },
+          768: { slidesPerView: 2.2, spaceBetween: 35 },
+          1024: { slidesPerView: 3, spaceBetween: 40 }
+        }
+      });
+      </script>
+      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    </div>
+</body>
+</html>
