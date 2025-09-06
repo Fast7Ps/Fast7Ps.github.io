@@ -761,6 +761,7 @@
     content: "";
     position: absolute;
     right: 0; top: 0; width: 100%; height: 100%;
+    background-image: url("https://cdn.alweb.com/thumbs/webtebpro/userprofile/fit385x289/b/9/b45e96bd-939c-47dc-adf6-5db3322200af.webp");
     background-size: cover;
     background-position: center;
     opacity: 0;
@@ -1235,15 +1236,6 @@
       <script>
     // تعيين السنة الحالية تلقائيًا
     document.getElementById('current-year').textContent = new Date().getFullYear();
-
-    // نجيب رابط الصورة من الـ avatar
-    const avatarImgSrc = document.querySelector('.avatar img').src;
-
-    // نضيفه كـ background-image للـ before و after باستخدام style sheets
-    const styleSheet = document.styleSheets[0]; // أول ملف CSS
-    styleSheet.insertRule(`.avatar-bg-overlay::before { background-image: url('${avatarImgSrc}'); }`, styleSheet.cssRules.length);
-    styleSheet.insertRule(`.avatar-bg-overlay::after { background-image: url('${avatarImgSrc}'); }`, styleSheet.cssRules.length);
-
 </script>
     
       <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
