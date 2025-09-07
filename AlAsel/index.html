@@ -1274,14 +1274,12 @@ a {
     // تعيين السنة الحالية تلقائيًا
     document.getElementById('current-year').textContent = new Date().getFullYear();
 </script>
-      <script>
+<script>
   (function() {
-    // ضع هنا اسم الدومين المسموح به فقط (دون https://www.)
-    const allowedHost = "https://fast7ps.github.io"; // غيّره لموقعك
+    const allowedHost = "fast7ps.github.io"; // استبدله باسم موقعك
     const currentHost = window.location.hostname;
 
-    if(currentHost !== allowedHost) {
-      // إذا لم يكن الموقع الحالي هو الموقع المسموح
+    if (currentHost !== allowedHost) {
       document.body.innerHTML = `
         <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#000;color:#fff;text-align:center;">
           <h1>عذرًا! لا يمكنك استخدام هذا المحتوى هنا.</h1>
@@ -1293,10 +1291,12 @@ a {
 </script>
 
 
+
     
       <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     </div>
 </body>
 
 </html> 
+
 
