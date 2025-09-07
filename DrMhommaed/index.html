@@ -831,6 +831,10 @@
   background-size: 300% 300%;
   animation: gradientMove 4s ease infinite;
 }
+a {
+  all: unset;      /* يلغي كل التنسيقات الافتراضية */
+  cursor: default; /* يخلي المؤشر عادي */
+}
 
 
   </style>
@@ -954,69 +958,7 @@
       </div>
 
       <!-- Contact Links -->
-      <div class="contact-links">
-        
-        <a class="contact-card phone-card" data-href="tel:0599123456">
-              <div class="contact-content">
-                  <div class="contact-left">
-                      <div class="contact-icon"><i class="fas fa-phone"></i></div>
-                      <div class="contact-text"><h3>اتصال مباشر</h3><p>059-912-3456</p></div>
-                  </div>
-                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
-              </div>
-          </a>
-
-          <a class="contact-card whatsapp-card" data-href="https://wa.me/972599123456">
-              <div class="contact-content">
-                  <div class="contact-left">
-                      <div class="contact-icon"><i class="fab fa-whatsapp"></i></div>
-                      <div class="contact-text"><h3>واتساب</h3><p>تواصل فوري</p></div>
-                  </div>
-                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
-              </div>
-          </a>
-
-          <a class="contact-card email-card" data-href="mailto:dr.mohammed.ahmed@gmail.com">
-              <div class="contact-content">
-                  <div class="contact-left">
-                      <div class="contact-icon"><i class="fas fa-envelope"></i></div>
-                      <div class="contact-text"><h3>البريد الإلكتروني</h3><p>راسلنا لأي استفسار</p></div>
-                  </div>
-                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
-              </div>
-          </a>
-
-          <a class="contact-card instagram-card" data-href="https://www.instagram.com/dr.mohammed.ahmed">
-              <div class="contact-content">
-                  <div class="contact-left">
-                      <div class="contact-icon"><i class="fab fa-instagram"></i></div>
-                      <div class="contact-text"><h3>انستغرام</h3><p>تابع نصائحنا الطبية</p></div>
-                  </div>
-                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
-              </div>
-          </a>
-
-      
-        
-         <a class="contact-card snapchat-card" data-href="https://www.snapchat.com/add/drmohammedahmed">
-        <div class="contact-content">
-            <div class="contact-left">
-                <div class="contact-icon"><i class="fab fa-snapchat"></i></div>
-                <div class="contact-text"><h3>سناب شات</h3><p>@drmohammedahmed</p></div>
-            </div>
-            <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
-        </div>
-    </a>
-          <a class="contact-card facebook-card" data-href="https://www.facebook.com/dr.mohammed.ahmed">
-              <div class="contact-content">
-                  <div class="contact-left">
-                      <div class="contact-icon"><i class="fab fa-facebook-f"></i></div>
-                      <div class="contact-text"><h3>فيسبook</h3><p>تابعنا للجديد</p></div>
-                  </div>
-                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
-              </div>
-          </a>
-      </div>
+      <div class="contact-links" id="contactLinks"></div>
 
       <!-- خريطة الموقع - جديد -->
       <div class="map-section">
@@ -1260,6 +1202,40 @@
     // تعيين السنة الحالية تلقائيًا
     document.getElementById('current-year').textContent = new Date().getFullYear();
 </script>
+      
+      
+       <script>
+    const contacts = [
+      { type: "phone", href: "tel:0599123456", icon: "fas fa-phone", title: "اتصال مباشر", subtitle: "059-912-3456" },
+      { type: "whatsapp", href: "https://wa.me/972599123456", icon: "fab fa-whatsapp", title: "واتساب", subtitle: "تواصل فوري" },
+      { type: "email", href: "mailto:dr.mohammed.ahmed@gmail.com", icon: "fas fa-envelope", title: "البريد الإلكتروني", subtitle: "راسلنا لأي استفسار" },
+      { type: "instagram", href: "https://www.instagram.com/dr.mohammed.ahmed", icon: "fab fa-instagram", title: "انستغرام", subtitle: "تابع نصائحنا الطبية" },
+      { type: "snapchat", href: "https://www.snapchat.com/add/drmohammedahmed", icon: "fab fa-snapchat", title: "سناب شات", subtitle: "@drmohammedahmed" },
+      { type: "facebook", href: "https://www.facebook.com/dr.mohammed.ahmed", icon: "fab fa-facebook-f", title: "فيسبوك", subtitle: "تابعنا للجديد" }
+    ];
+
+    const container = document.getElementById("contactLinks");
+
+    contacts.forEach(c => {
+      const card = document.createElement("a");
+      card.className = `contact-card ${c.type}-card`;
+      card.href = c.href;
+      card.innerHTML = `
+        <div class="contact-content">
+          <div class="contact-left">
+            <div class="contact-icon"><i class="${c.icon}"></i></div>
+            <div class="contact-text">
+              <h3>${c.title}</h3>
+              <p>${c.subtitle}</p>
+            </div>
+          </div>
+          <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  </script>
+
     
       <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     </div>
