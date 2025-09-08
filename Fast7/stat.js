@@ -1,27 +1,19 @@
-// تأثير العد التصاعدي للإحصائيات
+    <script>  
+// تأثير العد التصاعدي للإحصائيات - يبدأ فوراً
 function initializeStatsCounter() {
     const statItems = document.querySelectorAll('.stat-item');
-    const observerOptions = {
-        threshold: 0.7, // يبدأ العد عندما تظهر 70% من العنصر
-        rootMargin: '0px 0px -100px 0px' // يبدأ قبل 100px من الظهور
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const statItem = entry.target;
-                statItem.classList.add('animate');
-                animateCounter(statItem);
-                observer.unobserve(statItem); // إيقاف المراقبة بعد التشغيل مرة واحدة
-            }
-        });
-    }, observerOptions);
-
-    // مراقبة جميع عناصر الإحصائيات
-    statItems.forEach(item => {
-        observer.observe(item);
+    
+    if (statItems.length === 0) return;
+    
+    // تشغيل العدادات فوراً مع تأخير بسيط
+    statItems.forEach((item, index) => {
+        // تأخير تدريجي لكل عنصر (0.2s, 0.4s, 0.6s)
+        setTimeout(() => {
+            item.classList.add('animate');
+            animateCounter(item);
+        }, index * 200 + 300); // +300ms تأخير أولي
     });
-
+    
     // دالة العد التصاعدي
     function animateCounter(statItem) {
         const statNumber = statItem.querySelector('.stat-number');
@@ -29,162 +21,278 @@ function initializeStatsCounter() {
         const dataSuffix = statItem.getAttribute('data-suffix') || '';
         const isYears = statItem.getAttribute('data-years') === 'true';
         
+        if (!statNumber || !dataTarget) return;
+        
         let target = parseInt(dataTarget);
-        let current = parseInt(statNumber.getAttribute('data-number'));
+        let current = 0;
         let increment;
         let duration;
-
-        // تحديد سرعة العد حسب حجم الرقم
+        
+        // تحديد السرعة حسب حجم الرقم
         if (target <= 10) {
             increment = 1;
-            duration = 1500; // 1.5 ثانية للأرقام الصغيرة
-        } else if (target <= 100) {
+            duration = 2000;
+        } else if (target <= 50) {
             increment = 1;
-            duration = 2000; // 2 ثانية
+            duration = 2500;
+        } else if (target <= 100) {
+            increment = 2;
+            duration = 3000;
         } else {
             increment = 5;
-            duration = 2500; // 2.5 ثانية للأرقام الكبيرة
+            duration = 3500;
         }
-
-        // للسنوات، عد من 0 إلى الرقم ببطء أكثر
+        
+        // للسنوات، عد أبطأ
         if (isYears) {
             increment = 1;
-            duration = 3000; // 3 ثواني للسنوات
+            duration = 4000;
         }
-
+        
         const steps = Math.ceil(target / increment);
         const stepTime = Math.abs(duration / steps);
         let timer;
-
+        
+        console.log(`Starting counter for ${target}${dataSuffix} - duration: ${duration}ms`);
+        
+        // بدء العد
         timer = setInterval(() => {
             current += increment;
             
             if (current >= target) {
                 current = target;
                 clearInterval(timer);
+                // تأثير نهائي
+                finalNumberEffect(statNumber, statItem);
             }
             
-            // تحديث النص مع المؤثرات
+            // تحديث النص
             statNumber.textContent = current + dataSuffix;
             statNumber.setAttribute('data-number', current);
             
-            // إضافة تأثير وميض أثناء العد
+            // تأثير وميض أثناء العد
             statNumber.style.transform = 'scale(1.1)';
             statNumber.style.color = '#f59e0b';
             
             setTimeout(() => {
                 statNumber.style.transform = 'scale(1)';
                 statNumber.style.color = '';
-            }, 100);
+            }, 120);
             
         }, stepTime);
-
-        // عند انتهاء العد، إضافة تأثير نهائي
-        setTimeout(() => {
-            statNumber.style.transform = 'scale(1.2)';
-            statNumber.style.color = '#d97706';
+        
+        // تأثير نهائي للرقم
+        function finalNumberEffect(numberElement, statItem) {
+            numberElement.style.transform = 'scale(1.2)';
+            numberElement.style.color = '#d97706';
+            
+            // نبض للأيقونة
+            const statIcon = statItem.querySelector('.stat-icon');
+            if (statIcon) {
+                statIcon.style.transform = 'scale(1.2)';
+                
+                
+                setTimeout(() => {
+                    statIcon.style.transform = 'scale(1)';
+                    
+                }, 300);
+            }
             
             setTimeout(() => {
-                statNumber.style.transform = 'scale(1)';
-                statNumber.style.color = '';
-                
-                // إضافة تأثير نبض للأيقونة
-                const statIcon = statItem.querySelector('.stat-icon');
-                if (statIcon) {
-                    statIcon.style.animation = 'pulseIcon 1s ease-in-out';
-                    setTimeout(() => {
-                        statIcon.style.animation = '';
-                    }, 1000);
-                }
-                
-            }, 200);
-        }, duration);
-    }
-
-    // إعادة تشغيل العداد عند التمرير للأعلى (اختياري)
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        const headerCard = document.querySelector('.header-card');
-        
-        if (headerCard) {
-            const headerRect = headerCard.getBoundingClientRect();
-            const isVisible = headerRect.top < window.innerHeight && headerRect.bottom > 0;
-            
-            if (isVisible && !statItems[0].classList.contains('animate')) {
-                statItems.forEach(item => {
-                    item.classList.add('animate');
-                    animateCounter(item);
-                });
-            }
+                numberElement.style.transform = 'scale(1)';
+                numberElement.style.color = '';
+            }, 300);
         }
-    });
+    }
 }
 
-// دالة للتحقق من الرقم الحالي (للاختبار)
-function getCurrentStatValue(statItem) {
-    const statNumber = statItem.querySelector('.stat-number');
-    return statNumber.textContent;
-}
-
-// تهيئة العداد عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', function() {
-    // تشغيل العداد بعد تحميل الصفحة
-    setTimeout(() => {
-        initializeStatsCounter();
-    }, 500);
+// تعديل وظيفة الـ preloader لتشمل تشغيل العدادات
+function initializePreloader() {
+    const preloader = document.getElementById('preloader');
+    const mainContent = document.getElementById('main-content');
+    const logoImage = document.getElementById('logoImage');
     
-    // إضافة مستمع للتمرير لإعادة تشغيل العداد إذا لزم الأمر
-    let scrollTimer;
-    window.addEventListener('scroll', function() {
-        clearTimeout(scrollTimer);
-        scrollTimer = setTimeout(() => {
-            // التحقق من ظهور قسم الإحصائيات
-            const statsGrid = document.querySelector('.stats-grid');
-            if (statsGrid) {
-                const rect = statsGrid.getBoundingClientRect();
-                const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-                
-                if (isVisible) {
-                    const animatedItems = document.querySelectorAll('.stat-item.animate');
-                    if (animatedItems.length < 3) {
-                        // إذا لم تُحرّك جميع العناصر، أعد تشغيل العداد
-                        document.querySelectorAll('.stat-item').forEach(item => {
-                            if (!item.classList.contains('animate')) {
-                                item.classList.add('animate');
-                                animateCounter(item);
-                            }
-                        });
-                    }
-                }
+    if (!preloader || !mainContent) return;
+    
+    let isLoaded = false;
+    const minLoadTime = 3000;
+    let startTime = Date.now();
+    
+    // منع التمرير
+    document.body.style.overflow = 'hidden';
+    
+    // التحقق من تحميل الشعار
+    function checkLogoLoad() {
+        if (logoImage && logoImage.complete && logoImage.naturalWidth > 0) {
+            preloader.classList.add('loaded');
+            isLoaded = true;
+            console.log('Logo loaded successfully');
+            startLogoAnimation();
+        } else if (!logoImage) {
+            // إذا لم يوجد شعار، ابدأ مباشرة
+            setTimeout(() => {
+                preloader.classList.add('loaded');
+                isLoaded = true;
+            }, 300);
+        } else {
+            setTimeout(checkLogoLoad, 100);
+        }
+    }
+    
+    function startLogoAnimation() {
+        setTimeout(() => {
+            const logoSvg = document.querySelector('.logo-svg');
+            if (logoSvg) {
+                logoSvg.style.animation = 'logoRotate 4s linear infinite 0.5s';
             }
-        }, 100);
-    });
+        }, 500);
+    }
+    
+    // إضافة CSS للدوران
+    if (!document.querySelector('style[data-stats-animation]')) {
+        const style = document.createElement('style');
+        style.setAttribute('data-stats-animation', 'true');
+        style.textContent = `
+            @keyframes logoRotate {
+                from { transform: rotate(0deg) scale(1); }
+                to { transform: rotate(360deg) scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    // بدء التحقق
+    setTimeout(checkLogoLoad, 50);
+    
+    // إنهاء التحميل
+    function finishLoading() {
+        if (preloader && !preloader.classList.contains('hidden')) {
+            preloader.classList.add('hidden');
+            
+            setTimeout(() => {
+                if (mainContent) {
+                    mainContent.style.opacity = '1';
+                    mainContent.style.transform = 'translateY(0)';
+                }
+                
+                // تشغيل جميع الرسوم المتحركة فوراً
+                setTimeout(() => {
+                    // تشغيل العدادات أولاً
+                    if (typeof initializeStatsCounter === 'function') {
+                        initializeStatsCounter();
+                    }
+                    
+                    // ثم باقي الرسوم المتحركة
+                    setTimeout(() => {
+                        if (typeof initializeAnimations === 'function') initializeAnimations();
+                        if (typeof initializeWorkFilter === 'function') initializeWorkFilter();
+                    }, 500);
+                    
+                }, 100);
+                
+                // إزالة الـ preloader
+                setTimeout(() => {
+                    if (preloader) {
+                        preloader.remove();
+                    }
+                    document.body.style.overflow = 'auto';
+                }, 600);
+            }, 100);
+        }
+    }
+    
+    let loadTime = Date.now() - startTime;
+    let remainingTime = minLoadTime - loadTime;
+    
+    const timer = setTimeout(() => {
+        finishLoading();
+        clearTimeout(timer);
+    }, Math.max(500, remainingTime));
+    
+    // حماية
+    setTimeout(() => {
+        if (!preloader.classList.contains('hidden')) {
+            finishLoading();
+        }
+    }, 6000);
+}
+
+// تهيئة شاملة عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', function () {
+    console.log('DOM loaded, starting preloader');
+    
+    // تشغيل الـ preloader أولاً
+    initializePreloader();
+    
+    // تهيئة Swiper بعد فترة قصيرة
+    setTimeout(() => {
+        if (typeof Swiper !== 'undefined') {
+            const swiper = new Swiper('.swiper', {
+                slidesPerView: 1.6,
+                centeredSlides: true,
+                spaceBetween: 40,
+                loop: true,
+                autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: true,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                breakpoints: {
+                    480: { slidesPerView: 2.2, spaceBetween: 35 },
+                    768: { slidesPerView: 2.2, spaceBetween: 35 },
+                    1024: { slidesPerView: 3, spaceBetween: 40 }
+                },
+                speed: 600,
+                effect: 'slide',
+                grabCursor: true,
+            });
+            console.log('Swiper initialized');
+        }
+    }, 200);
+    
+    // تعيين السنة الحالية
+    const currentYearElement = document.getElementById('current-year');
+    if (currentYearElement) {
+        currentYearElement.textContent = new Date().getFullYear();
+    }
 });
 
-// إضافة تأثير للعناصر عند التمرير (اختياري)
-function addScrollAnimations() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
+// تشغيل العدادات عند تحميل كامل الصفحة كحماية
+window.addEventListener('load', function() {
+    console.log('Page fully loaded');
     
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
+    // تشغيل العدادات فوراً إذا لم تُشغل بعد
+    setTimeout(() => {
+        if (typeof initializeStatsCounter === 'function') {
+            // التحقق من أن العدادات لم تُشغل بعد
+            const animatedItems = document.querySelectorAll('.stat-item.animate');
+            if (animatedItems.length === 0) {
+                console.log('Starting stats counter on page load');
+                initializeStatsCounter();
             }
-        });
-    }, observerOptions);
+        }
+    }, 500);
+});
+
+// إضافة تشغيل يدوي للعدادات بعد الـ preloader (حماية إضافية)
+function ensureStatsCounter() {
+    const statItems = document.querySelectorAll('.stat-item');
+    const animatedItems = document.querySelectorAll('.stat-item.animate');
     
-    // تطبيق على جميع العناصر التي تحتاج للرسوم المتحركة
-    document.querySelectorAll('.stat-item, .contact-card, .work-item').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-        observer.observe(el);
-    });
+    if (statItems.length > 0 && animatedItems.length === 0) {
+        console.log('Ensuring stats counter starts');
+        initializeStatsCounter();
+    }
 }
 
-// استدعاء الدالة عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', addScrollAnimations);
+// تشغيل الضمان بعد 2 ثانية من تحميل الصفحة
+setTimeout(ensureStatsCounter, 2000);
+</script>
