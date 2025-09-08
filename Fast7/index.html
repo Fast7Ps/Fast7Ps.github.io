@@ -1157,19 +1157,19 @@ a {
 
 @media (max-width: 480px) {
   .work-grid {
-    grid-template-columns: 2fr; /* 1 بطاقة على الشاشات الصغيرة جداً */
+    grid-template-columns: repeat(2, 1fr); /* 1 بطاقة على الشاشات الصغيرة جداً */
     gap: 1rem;
   }
   
   .filter-buttons {
-    flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
+    
+   gap: 0.5rem;
   }
   
   .filter-btn {
-    width: 200px;
-    padding: 0.75rem;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    min-width: 80px;
   }
   
   .work-image {
