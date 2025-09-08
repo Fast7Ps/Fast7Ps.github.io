@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -1274,247 +1273,9 @@ a {
   }
 }
     
-    * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Arial', sans-serif;
-    overflow-x: hidden;
-}
-
-/* شاشة البداية مع تأثير تلاشي محسن */
-.loading-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background-color: #ffffff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    
-    /* تأثير التلاشي الأساسي */
-    opacity: 1;
-    visibility: visible;
-    transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.logo-container {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    
-    /* تأثير تلاشي للحاوية */
-    opacity: 1;
-    transform: scale(1);
-    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* الشعار مع تغيير اللون والتلاشي */
-.logo {
-    width: 250px;
-    height: auto;
-    /* لون أزرق داكن */
-    filter: 
-        brightness(0) 
-        saturate(100%) 
-        invert(14%) 
-        sepia(99%) 
-        saturate(7492%) 
-        hue-rotate(239deg) 
-        brightness(92%) 
-        contrast(116%);
-    
-    /* تأثيرات التلاشي والحركة */
-    opacity: 1;
-    transform: scale(1) rotateY(0deg);
-    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    
-    /* الأنميشن الأساسي */
-    animation: logoFloat 3s ease-in-out infinite;
-}
-
-/* أنميشن الشعار المحسن */
-@keyframes logoFloat {
-    0%, 100% {
-        transform: translateY(0px) scale(1) rotateY(0deg);
-        opacity: 0.8;
-    }
-    50% {
-        transform: translateY(-10px) scale(1.05) rotateY(2deg);
-        opacity: 1;
-    }
-}
-
-.logo:hover {
-    transform: scale(1.08) rotateY(1deg);
-}
-
-/* النص التمهيدي مع تأثير تلاشي */
-.loading-text {
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
-    opacity: 1;
-    transform: translateY(0);
-    transition: all 0.5s ease;
-    animation: textPulse 2s ease-in-out infinite;
-}
-
-@keyframes textPulse {
-    0%, 100% {
-        opacity: 0.6;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 1;
-        transform: scale(1.02);
-    }
-}
-
-/* تأثير التلاشي عند الخروج */
-.loading-screen.fade-out {
-    opacity: 0;
-    visibility: hidden;
-    transform: scale(1.1);
-    transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.logo-container.fade-out {
-    opacity: 0;
-    transform: scale(0.9);
-    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.logo.fade-out {
-    opacity: 0;
-    transform: scale(0.8) rotateY(10deg);
-    transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.loading-text.fade-out {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* المحتوى الرئيسي مع تأثير الظهور */
-.main-content {
-    min-height: 100vh;
-    display: none;
-    padding: 50px 20px;
-    text-align: center;
-    background-color: #f8f9fa;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.main-content.show {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
-    animation: contentSlideIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes contentSlideIn {
-    0% {
-        opacity: 0;
-        transform: translateY(50px) scale(0.95);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-/* تأثير الخلفية المتدرجة أثناء التلاشي */
-.loading-screen::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-    opacity: 1;
-    transition: opacity 1.2s ease;
-    z-index: -1;
-}
-
-.loading-screen.fade-out::before {
-    opacity: 0;
-}
-
-.logo {
-    width: 250px;
-    height: auto;
-    /* لون رمادي داكن */
-    filter: 
-        brightness(0) 
-        saturate(100%) 
-        invert(11%) 
-        sepia(84%) 
-        saturate(1915%) 
-        hue-rotate(199deg) 
-        brightness(90%) 
-        contrast(102%);
-    
-    
-}
-
-/* استجابة للشاشات الصغيرة */
-@media (max-width: 768px) {
-    .logo {
-        width: 200px;
-    }
-    
-    .loading-text {
-        font-size: 16px;
-    }
-    
-    .main-content {
-        padding: 30px 15px;
-    }
-    
-    /* تقليل تأثيرات التلاشي على الموبايل */
-    .loading-screen.fade-out {
-        transition: all 0.8s ease;
-    }
-}
-
-@media (max-width: 480px) {
-    .logo {
-        width: 180px;
-    }
-    
-    .loading-text {
-        font-size: 14px;
-    }
-}
-    
-  </style> 
+  </style>
 </head>
 <body>
-  
-  <!-- شاشة البداية -->
-    <div id="loading-screen" class="loading-screen">
-        <div class="logo-container">
-            <img src="https://raw.githubusercontent.com/merekxi/fast7/ebd5957b2cec50f2e08f1d23e110f5267bd118b3/FAST7%D9%81%D8%A7%D8%B3%D8%AA.svg" 
-                 alt="FAST7 Logo" 
-                 class="logo">
-            <div class="loading-text">مرحباً بك في فاست7</div>
-        </div>
-    </div>
-  
-  
     <!-- Background Pattern -->
     <div class="bg-pattern"></div>
 
@@ -2078,7 +1839,7 @@ body {
               
           } catch (error) {
               console.error('Error initializing map:', error);
-              const mapContainer = document.getElementById('map'); 
+              const mapContainer = document.getElementById('map');
               if (mapContainer) {
                   mapContainer.innerHTML = `
                       <div class="map-error">
@@ -2642,69 +2403,10 @@ function addScrollAnimations() {
 // استدعاء الدالة عند تحميل الصفحة
 document.addEventListener('DOMContentLoaded', addScrollAnimations);
 </script>
-      
-      <script>
-        
-        document.addEventListener('DOMContentLoaded', function() {
-    // العثور على العناصر
-    const loadingScreen = document.getElementById('loading-screen');
-    const mainContent = document.getElementById('main-content');
-    const logo = document.querySelector('.logo');
-    
-    // وقت الانتظار قبل إخفاء شاشة التحميل (يمكنك تعديله)
-    const loadingTime = 3000; // 3 ثواني
-    
-    // تشغيل الأنميشن عند تحميل الصفحة
-    setTimeout(() => {
-        // إضافة تأثير التلاشي لشاشة التحميل
-        loadingScreen.classList.add('fade-out');
-        
-        // إظهار المحتوى الرئيسي بعد انتهاء التلاشي
-        setTimeout(() => {
-            loadingScreen.style.display = 'none';
-            mainContent.classList.add('show');
-        }, 500); // 500ms للتأثير التلاشي
-    }, loadingTime);
-    
-    // إضافة تأثيرات تفاعلية للشعار
-    logo.addEventListener('mouseenter', function() {
-        this.style.transform = 'scale(1.05) rotateY(2deg)';
-    });
-    
-    logo.addEventListener('mouseleave', function() {
-        this.style.transform = 'scale(1) rotateY(0deg)';
-    });
-    
-    // منع التمرير أثناء شاشة التحميل
-    document.body.style.overflow = 'hidden';
-    
-    // إعادة التمرير عند انتهاء الشاشة التمهيدية
-    setTimeout(() => {
-        document.body.style.overflow = 'auto';
-    }, loadingTime + 500);
-});
-
-// وظيفة إضافية للتحكم في سرعة الأنميشن
-function adjustLoadingTime(newTime) {
-    const loadingScreen = document.getElementById('loading-screen');
-    const mainContent = document.getElementById('main-content');
-    
-    // إيقاف الشاشة الحالية وإعادة تشغيلها
-    loadingScreen.style.display = 'flex';
-    mainContent.classList.remove('show');
-    
-    setTimeout(() => {
-        loadingScreen.classList.add('fade-out');
-        setTimeout(() => {
-            loadingScreen.style.display = 'none';
-            mainContent.classList.add('show');
-        }, 500);
-    }, newTime);
-}
-  </script>
        
       <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     </div>
 </body>
 
 </html> 
+
