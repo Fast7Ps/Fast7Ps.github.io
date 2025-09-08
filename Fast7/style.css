@@ -69,7 +69,7 @@
     .header-bg{
         position:absolute;
         inset:0;
-        background:linear-gradient(135deg,#f59e0b 0%,#d97706 50%,#f59e0b 100%);
+        background:linear-gradient(135deg, #070f2a 0%, #06112e 50%, #0c1a48 100%);
           
     }
     .header-bg::after{
@@ -273,7 +273,7 @@
     }
     
     .map-header {
-      background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #f59e0b 100%);
+      background: linear-gradient(135deg, #070f2a 0%, #06112e 50%, #0c1a48 100%);
       padding: 1.5rem 2rem;
       color: #fff;
       text-align: center;
@@ -888,7 +888,7 @@ a {
 }
 
 .filter-btn:hover {
-  background: #f59e0b;
+  background: #09153b;
   border-color: #f59e0b;
   color: #fff;
   transform: translateY(-2px);
@@ -896,7 +896,7 @@ a {
 }
 
 .filter-btn.active {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
+  background: linear-gradient(135deg, #070f2a 0%, #06112e 50%, #0c1a48 100%);
   border-color: #f59e0b;
   color: #fff;
   box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
@@ -1256,4 +1256,5 @@ a {
   }
 }
     
+
   
