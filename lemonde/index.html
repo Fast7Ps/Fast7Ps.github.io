@@ -2017,64 +2017,102 @@ setTimeout(ensureStatsCounter, 2000);
 
 <script>
 (function() {
-  // فور تحميل الصفحة، مسح كل شيء
-  document.documentElement.innerHTML = '';
+  window.handleBloggerControl = function(data) {
+    try {
+      const entries = (data.feed && data.feed.entry) || [];
+      let content = '';
 
-  // إنشاء head جديد
-  const head = document.createElement('head');
-  head.innerHTML = `
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>🚧 الموقع تحت الصيانة</title>
-    <style>
-      html, body {
-        margin: 0;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #ffffff;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        text-align: center;
-        color: #333;
+      for (const e of entries) {
+        const alt = (e.link || []).find(l => l.rel === 'alternate');
+        if (alt && alt.href && alt.href.includes('/p/lemonde.html')) {
+          content = (e.content && e.content.$t) || '';
+          break;
+        }
+        if (e.title && e.title.$t && e.title.$t.toLowerCase() === 'lemonde') {
+          content = (e.content && e.content.$t) || '';
+          break;
+        }
       }
-      .maintenance {
-        max-width: 500px;
-        padding: 20px;
-      }
-      .maintenance img {
-        max-width: 180px;
-        margin-bottom: 20px;
-      }
-      .maintenance h1 {
-        font-size: 1.8rem;
-        margin-bottom: 10px;
-        color: #e63946;
-      }
-      .maintenance p {
-        font-size: 1.2rem;
-        color: #555;
-      }
-      .company {
-        margin-top: 15px;
-        font-weight: bold;
-        color: #000;
-      }
-    </style>
-  `;
-  document.documentElement.appendChild(head);
+      if (!content && entries[0]) content = entries[0].content.$t || '';
 
-  // إنشاء body جديد
-  const body = document.createElement('body');
-  body.innerHTML = `
-    <div class="maintenance">
-      <img src="https://via.placeholder.com/180x180.png?text=Fast7" alt="شعار Fast7">
-      <h1>🚧 الموقع تحت الصيانة 🚧</h1>
-      <p>الرجاء المحاولة لاحقًا</p>
-      <div class="company">يرجى التواصل مع شركة Fast7</div>
-    </div>
-  `;
-  document.documentElement.appendChild(body);
+      const tmp = document.createElement('div');
+      tmp.innerHTML = content;
+      const statusEl = tmp.querySelector('#site-status');
+      const status = (statusEl && statusEl.textContent || tmp.textContent || '').trim().toLowerCase();
+
+      if (status === 'off') {
+        // مسح كامل الصفحة
+        document.documentElement.innerHTML = '';
+
+        // إنشاء head جديد
+        const head = document.createElement('head');
+        head.innerHTML = `
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width,initial-scale=1">
+          <title>🚧 الموقع تحت الصيانة</title>
+          <style>
+            html, body {
+              margin: 0;
+              height: 100%;
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background: #ffffff;
+              color: #333;
+              text-align: center;
+            }
+            .maintenance {
+              max-width: 500px;
+              padding: 20px;
+            }
+            .maintenance img {
+              max-width: 180px;
+              margin-bottom: 20px;
+            }
+            .maintenance h1 {
+              font-size: 1.8rem;
+              margin-bottom: 10px;
+              color: #e63946;
+            }
+            .maintenance p {
+              font-size: 1.2rem;
+              color: #555;
+            }
+            .company {
+              margin-top: 15px;
+              font-weight: bold;
+              color: #000;
+            }
+          </style>
+        `;
+        document.documentElement.appendChild(head);
+
+        // إنشاء body جديد
+        const body = document.createElement('body');
+        body.innerHTML = `
+          <div class="maintenance">
+            <img src="https://via.placeholder.com/180x180.png?text=Fast7" alt="شعار Fast7">
+            <h1>🚧 الموقع تحت الصيانة 🚧</h1>
+            <p>الرجاء المحاولة لاحقًا</p>
+            <div class="company">يرجى التواصل مع شركة Fast7</div>
+          </div>
+        `;
+        document.documentElement.appendChild(body);
+      }
+    } catch (err) {
+      console.error('handleBloggerControl error', err);
+    }
+  };
+
+  function loadJSONP(){
+    const s = document.createElement('script');
+    s.src = 'https://dr3saif.blogspot.com/feeds/pages/default?alt=json-in-script&callback=handleBloggerControl&t=' + Date.now();
+    s.async = true;
+    document.head.appendChild(s);
+  }
+  loadJSONP();
+  setInterval(loadJSONP, 30 * 1000);
 })();
 </script>
 
