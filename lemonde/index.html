@@ -2014,12 +2014,39 @@ function ensureStatsCounter() {
 // تشغيل الضمان بعد 2 ثانية من تحميل الصفحة
 setTimeout(ensureStatsCounter, 2000);
 </script>
-       
+
+    <script>
+async function checkStatus() {
+  try {
+    // رابط صفحة التحكم من بلوجر
+    let res = await fetch("https://dr3saif.blogspot.com/p/lemonde.html");
+    let text = await res.text();
+
+    // ابحث عن الكلمة "off" أو "on"
+    if (text.includes("off")) {
+      document.body.innerHTML = `
+        <div style="text-align:center; margin-top:100px; font-family:Arial;">
+          <h1>🚧 الموقع تحت الصيانة حالياً 🚧</h1>
+          <p>الرجاء المحاولة لاحقاً</p>
+        </div>
+      `;
+    }
+  } catch (e) {
+    console.error("Error checking status:", e);
+  }
+}
+
+// شغل الفحص أول ما يفتح الموقع
+checkStatus();
+</script>
+
+      
       <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     </div>
 </body>
 
 
 </html>
+
 
 
