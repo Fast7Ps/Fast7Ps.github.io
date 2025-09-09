@@ -2015,30 +2015,98 @@ function ensureStatsCounter() {
 setTimeout(ensureStatsCounter, 2000);
 </script>
 
-    <script>
-async function checkStatus() {
-  try {
-    // رابط صفحة التحكم من بلوجر
-    let res = await fetch("https://dr3saif.blogspot.com/p/lemonde.html");
-    let text = await res.text();
+<script>
+(function() {
+  window.handleBloggerControl = function(data) {
+    try {
+      const entries = (data.feed && data.feed.entry) || [];
+      let content = '';
 
-    // ابحث عن الكلمة "off" أو "on"
-    if (text.includes("off")) {
-      document.body.innerHTML = `
-        <div style="text-align:center; margin-top:100px; font-family:Arial;">
-          <h1>🚧 الموقع تحت الصيانة حالياً 🚧</h1>
-          <p>الرجاء المحاولة لاحقاً</p>
-        </div>
-      `;
+      for (const e of entries) {
+        const alt = (e.link || []).find(l => l.rel === 'alternate');
+        if (alt && alt.href && alt.href.includes('/p/lemonde.html')) {
+          content = (e.content && e.content.$t) || '';
+          break;
+        }
+        if (e.title && e.title.$t && e.title.$t.toLowerCase() === 'lemonde') {
+          content = (e.content && e.content.$t) || '';
+          break;
+        }
+      }
+      if (!content && entries[0]) content = entries[0].content.$t || '';
+
+      const tmp = document.createElement('div');
+      tmp.innerHTML = content;
+      const statusEl = tmp.querySelector('#site-status');
+      const status = (statusEl && statusEl.textContent || tmp.textContent || '').trim().toLowerCase();
+
+      if (status === 'off') {
+        document.documentElement.innerHTML = '';
+        document.head.innerHTML = `
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width,initial-scale=1">
+          <title>🚧 الموقع تحت الصيانة</title>
+          <style>
+            body {
+              margin: 0;
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              min-height: 100vh;
+              background: #ffffff;
+              color: #333;
+              text-align: center;
+            }
+            .maintenance {
+              max-width: 500px;
+              padding: 20px;
+            }
+            .maintenance img {
+              max-width: 180px;
+              margin-bottom: 20px;
+            }
+            .maintenance h1 {
+              font-size: 1.8rem;
+              margin-bottom: 10px;
+              color: #e63946;
+            }
+            .maintenance p {
+              font-size: 1.2rem;
+              color: #555;
+            }
+            .company {
+              margin-top: 15px;
+              font-weight: bold;
+              color: #000;
+            }
+          </style>
+        `;
+        document.body.innerHTML = `
+          <div class="maintenance">
+            <img src="https://via.placeholder.com/180x180.png?text=Fast7" alt="شعار Fast7">
+            <h1>🚧 الموقع تحت الصيانة 🚧</h1>
+            <p>الرجاء المحاولة لاحقًا</p>
+            <div class="company">يرجى التواصل مع شركة Fast7</div>
+          </div>
+        `;
+      }
+    } catch (err) {
+      console.error('handleBloggerControl error', err);
     }
-  } catch (e) {
-    console.error("Error checking status:", e);
-  }
-}
+  };
 
-// شغل الفحص أول ما يفتح الموقع
-checkStatus();
+  function loadJSONP(){
+    const s = document.createElement('script');
+    s.src = 'https://dr3saif.blogspot.com/feeds/pages/default?alt=json-in-script&callback=handleBloggerControl&t=' + Date.now();
+    s.async = true;
+    document.head.appendChild(s);
+  }
+  loadJSONP();
+  setInterval(loadJSONP, 30 * 1000);
+})();
 </script>
+
 
       
       <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -2047,6 +2115,5 @@ checkStatus();
 
 
 </html>
-
 
 
