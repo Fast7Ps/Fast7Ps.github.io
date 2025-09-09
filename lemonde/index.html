@@ -2041,19 +2041,23 @@ setTimeout(ensureStatsCounter, 2000);
       const status = (statusEl && statusEl.textContent || tmp.textContent || '').trim().toLowerCase();
 
       if (status === 'off') {
+        // مسح كامل الصفحة
         document.documentElement.innerHTML = '';
-        document.head.innerHTML = `
+
+        // إنشاء head جديد
+        const head = document.createElement('head');
+        head.innerHTML = `
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width,initial-scale=1">
           <title>🚧 الموقع تحت الصيانة</title>
           <style>
-            body {
+            html, body {
               margin: 0;
+              height: 100%;
               font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
               display: flex;
               align-items: center;
               justify-content: center;
-              min-height: 100vh;
               background: #ffffff;
               color: #333;
               text-align: center;
@@ -2082,7 +2086,11 @@ setTimeout(ensureStatsCounter, 2000);
             }
           </style>
         `;
-        document.body.innerHTML = `
+        document.documentElement.appendChild(head);
+
+        // إنشاء body جديد
+        const body = document.createElement('body');
+        body.innerHTML = `
           <div class="maintenance">
             <img src="https://via.placeholder.com/180x180.png?text=Fast7" alt="شعار Fast7">
             <h1>🚧 الموقع تحت الصيانة 🚧</h1>
@@ -2090,6 +2098,7 @@ setTimeout(ensureStatsCounter, 2000);
             <div class="company">يرجى التواصل مع شركة Fast7</div>
           </div>
         `;
+        document.documentElement.appendChild(body);
       }
     } catch (err) {
       console.error('handleBloggerControl error', err);
@@ -2106,6 +2115,7 @@ setTimeout(ensureStatsCounter, 2000);
   setInterval(loadJSONP, 30 * 1000);
 })();
 </script>
+
 
 
       
