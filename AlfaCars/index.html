@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+ <!-- Swiper -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ALFA CARS | سيارات | الخليل - فلسطين</title>
+  <meta name="description" content="ALFA CARS - شركة سيارات في الخليل، توفر أفضل السيارات الجديدة والمستعملة مع خدمة صيانة وتوصيل للمركبات." />
+  <meta name="keywords" content="سيارات, ALFA CARS, الخليل, فلسطين, سيارات جديدة, سيارات مستعملة, صيانة سيارات" />
+  <meta name="theme-color" content="#8b5cf6" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="ass/css/style.css" />
+  <style>
+  /* Header والخلفيات */
+.map-header,
+.header-bg {
+  background: linear-gradient(135deg, #0b1d3a 0%, #0f2545 50%, #152c57 100%);
+}
+
+/* أزرار الأسهم */
+.swiper-button-next,
+.swiper-button-prev {
+  background: rgb(20, 22, 30);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background: rgb(30, 32, 45);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+}
+
+/* تدرجات الأرقام والعناوين */
+.stat-number::after,
+.slider-title::after {
+  background: linear-gradient(135deg, #ff8800, #ffaa33);
+}
+
+/* Overlay الشعار */
+.avatar-bg-overlay::before,
+.avatar-bg-overlay::after {
+  background-image: url("ass/img/logo1.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+   </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+
+    <div class="container" id="main-content">
+     <!-- Header Card -->
+      <div class="header-card fade-in">
+        <div class="header-bg"><div class="avatar-bg-overlay"></div></div>
+        <div class="header-content">
+          <div class="profile-section">
+            <div class="avatar-container" style="position: relative;">
+              <div class="avatar" style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                <img src="ass/img/logo.webp" alt="ALFA CARS" style="width:100%; height:100%; object-fit: cover;">
+              </div>
+              <div class="status-indicator" style="position: absolute; bottom:4px; right:4px; width:16px; height:16px; background-color:#00c853; border:2px solid #fff; border-radius:50%;"></div>
+            </div>
+            <div class="profile-info">
+              <h1 class="band-name">ALFA CARS</h1>
+              <p class="band-title">شركة سيارات</p>
+              <p class="band-description">ALFA CARS تقدم أفضل السيارات الجديدة والمستعملة في الخليل مع خدمات صيانة وتوصيل احترافية لجميع مناطق فلسطين.</p>
+              <div class="location">
+                <i class="fas fa-map-marker-alt"></i> <span>الخليل - فلسطين</span> 
+              </div>
+            </div>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-item" data-target="500" data-suffix="+">
+              <div class="stat-icon"><i class="fas fa-car"></i></div>
+              <div class="stat-number" data-number="0">0</div>
+              <div class="stat-label">سيارة متوفرة</div>
+            </div>
+            <div class="stat-item" data-target="150" data-suffix="+">
+              <div class="stat-icon"><i class="fas fa-tools"></i></div>
+              <div class="stat-number" data-number="0">0</div>
+              <div class="stat-label">خدمة صيانة</div>
+            </div>
+            <div class="stat-item" data-target="3000" data-suffix="+">
+              <div class="stat-icon"><i class="fas fa-users"></i></div>
+              <div class="stat-number" data-number="0">0</div>
+              <div class="stat-label">زبون راضي</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+       <!-- عنوان السلايدر -->
+      <div class="slider-header">
+        <h2 class="slider-title">أحدث السيارات</h2>
+        <p class="slider-subtitle">استعرض أحدث السيارات الجديدة والمستعملة المتوفرة لدينا</p>
+      </div>
+
+ 
+     <!-- السلايدر -->
+<div class="swiper">
+  <div class="swiper-wrapper">
+    <!-- بطاقة 1 - سيارة سيدان -->
+    <div class="swiper-slide">
+      <div class="product-card" style="position: relative; overflow: hidden; border-radius: 10px;">
+        <img src="ass/img/img1.avif" alt="سيارة سيدان" style="width: 100%; height: 100%; object-fit: cover;">
+        <div class="discount-badge">خصم 10%</div>
+        <div class="product-content" style="position: absolute; bottom: 10px; left: 10px; color: #fff; text-shadow: 0 0 5px rgba(0,0,0,0.5);">
+          <h3 class="product-title">سيارة سيدان</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- بطاقة 2 - سيارة SUV -->
+    <div class="swiper-slide">
+      <div class="product-card" style="position: relative; overflow: hidden; border-radius: 10px;">
+        <video autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover;">
+          <source src="ass/vd/vd1.mp4" type="video/mp4">
+          متصفحك لا يدعم تشغيل الفيديو
+        </video>
+        <div class="product-content" style="position: absolute; bottom: 10px; left: 10px; color: #fff; text-shadow: 0 0 5px rgba(0,0,0,0.5);">
+          <h3 class="product-title">سيارة SUV</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- بطاقة 3 - سيارة رياضية -->
+    <div class="swiper-slide">
+      <div class="product-card">
+        <img src="ass/img/img2.avif" alt="سيارة رياضية" style="width: 100%; height: 100%; object-fit: cover;">
+        <div class="discount-badge">جديد</div>
+        <div class="product-content">
+          <h3 class="product-title">سيارة رياضية</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- بطاقة 4 - سيارة كهربائية -->
+    <div class="swiper-slide">
+      <div class="product-card">
+        <img src="ass/img/img3.jpeg" alt="سيارة كهربائية" style="width: 100%; height: 100%; object-fit: cover;">
+        <div class="product-content">
+          <h3 class="product-title">سيارة كهربائية</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- بطاقة 5 - سيارة عائلية -->
+    <div class="swiper-slide">
+      <div class="product-card" style="position: relative; overflow: hidden; border-radius: 10px;">
+        <video autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover;">
+          <source src="ass/vd/vd2.mp4" type="video/mp4">
+          متصفحك لا يدعم تشغيل الفيديو
+        </video>
+        <div class="product-content" style="position: absolute; bottom: 10px; left: 10px; color: #fff; text-shadow: 0 0 5px rgba(0,0,0,0.5);">
+          <h3 class="product-title">سيارة عائلية</h3>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- الأسهم -->
+  <div class="swiper-button-next"></div>
+  <div class="swiper-button-prev"></div>
+
+  <!-- النقاط -->
+  <div class="swiper-pagination"></div>
+</div>
+
+      
+      <!-- Contact Links -->
+      <div class="contact-links">
+        <a class="contact-card phone-card" data-href="tel:0595803308">
+              <div class="contact-content">
+                  <div class="contact-left">
+                      <div class="contact-icon"><i class="fas fa-phone"></i></div>
+                      <div class="contact-text"><h3>اتصال مباشر</h3><p>0595803308</p></div>
+                  </div>
+                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
+              </div>
+          </a>
+
+          <a class="contact-card whatsapp-card" data-href="https://wa.me/972595803308">
+              <div class="contact-content">
+                  <div class="contact-left">
+                      <div class="contact-icon"><i class="fab fa-whatsapp"></i></div>
+                      <div class="contact-text"><h3>واتساب</h3><p>طلب سريع</p></div>
+                  </div>
+                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
+              </div>
+          </a>
+
+          <a class="contact-card email-card" data-href="mailto:info@alfacars.com">
+              <div class="contact-content">
+                  <div class="contact-left">
+                      <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                      <div class="contact-text"><h3>البريد الإلكتروني</h3><p>استفسار عن السيارات</p></div>
+                  </div>
+                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
+              </div>
+          </a>
+
+          <a class="contact-card instagram-card" data-href="https://www.instagram.com/alfacars/">
+              <div class="contact-content">
+                  <div class="contact-left">
+                      <div class="contact-icon"><i class="fab fa-instagram"></i></div>
+                      <div class="contact-text"><h3>انستغرام</h3><p>تابع آخر السيارات</p></div>
+                  </div>
+                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
+              </div>
+          </a>
+
+          <a class="contact-card facebook-card" data-href="https://www.facebook.com/alfacars">
+              <div class="contact-content">
+                  <div class="contact-left">
+                      <div class="contact-icon"><i class="fab fa-facebook-f"></i></div>
+                      <div class="contact-text"><h3>فيسبوك</h3><p>عروض السيارات</p></div>
+                  </div>
+                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
+              </div>
+          </a>
+      </div>
+
+    <!-- خريطة الموقع -->
+      <div class="map-section">
+        <div class="map-card">
+          <div class="map-header">
+            <h2>عنواننا في الخليل</h2>
+            <p>الخليل - فلسطين</p>
+          </div>
+          <div class="map-container">
+            <div id="map" style="height: 100%; width: 100%;"></div>
+            <div class="map-overlay">
+              <h3>ALFA CARS</h3>
+              <p><i class="fas fa-map-marker-alt"></i> الخليل - فلسطين</p>
+              <p><i class="fas fa-clock"></i> متاح يومياً: 9 ص - 8 م</p>
+              <p><i class="fas fa-phone"></i> +972 59 328 2000</p>
+              <a href="https://www.google.com/maps/search/?api=1&query=31.5304,35.0963" target="_blank">فتح في Google Maps</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer-card">
+        <div class="footer-content">
+          <p class="footer-title">© <span id="current-year"></span> ALFA CARS - جميع الحقوق محفوظة</p>
+          <p class="footer-subtitle">شركة سيارات في الخليل - فلسطين - أفضل السيارات الجديدة والمستعملة</p>
+          <div class="footer-status">
+            <div class="status-dot-small"></div>
+            <span>متاح للطلبات الجديدة</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating WhatsApp Button -->
+      <div class="floating-whatsapp">
+        <a href="https://wa.me/message/WQSQBDFTKWU3O1" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i></a>
+      </div>
+
+      <div class="floating-whatsapp">
+          <a href="https://wa.me/972595803308" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i></a>
+      </div>
+
+      <script src="ass/js/map.js"></script>
+      <script src="ass/js/vv.js"></script>
+      <script src="ass/js/gg.js"></script>
+      <script src="ass/js/leaflet.js"></script>
+
+    <script>
+function initializeMap() {
+    try {
+        const latitude = 31.5304;
+        const longitude = 35.0963;
+        const map = L.map('map').setView([latitude, longitude], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        const marker = L.marker([latitude, longitude]).addTo(map);
+        marker.bindPopup("<b>ALFA CARS</b><br>شركة سيارات - الخليل فلسطين").openPopup();
+    } catch (error) {
+        console.error('Error initializing map:', error);
+        const mapContainer = document.getElementById('map');
+        if (mapContainer) {
+            mapContainer.innerHTML = `
+                <div class="map-error">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <p>عذراً، تعذر تحميل الخريطة</p>
+                    <p>يمكنك <a href="https://www.google.com/maps/search/?api=1&query=31.5304,35.0963" target="_blank">النقر هنا</a> لفتح الخريطة في نافذة جديدة</p>
+                </div>`;
+        }
+    }
+}
+</script>
+
+    </div>
+</body>
+</html>
