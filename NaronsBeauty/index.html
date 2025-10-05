@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+ <!-- Swiper -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Narons Beauty | منتجات تجميل | الخليل - فلسطين</title>
+  <meta name="description" content="Narons Beauty - متجر تجميل في الخليل، يقدم أفضل المنتجات التجميلية ومستحضرات التخسيس والعناية بالبشرة والشعر مع توصيل احترافي وخدمة عملاء متفوقة." />
+  <meta name="keywords" content="تجميل, Narons Beauty, الخليل, فلسطين, مستحضرات تجميل, مستحضرات تخسيس, عناية بالبشرة, عناية بالشعر" />
+  <meta name="theme-color" content="#ec4899" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="ass/css/style.css" />
+  <style>
+  /* Header والخلفيات */
+.map-header,
+.header-bg {
+  background: linear-gradient(135deg, #560c0c 0%, #440e0e 50%, #571515 100%);
+}
+
+/* أزرار الأسهم */
+.swiper-button-next,
+.swiper-button-prev {
+  background: rgb(255 255 255 / 80%);
+  color: #560c0c;
+  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.15);
+}
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background: #560c0c;
+  color: #fff;
+  box-shadow: 0 4px 13px rgba(236, 72, 153, 0.28);
+}
+
+/* تدرجات الأرقام والعناوين */
+.stat-number::after,
+.slider-title::after {
+  background: linear-gradient(135deg, #ff8800, #ffaa33);
+}
+
+/* Overlay الشعار */
+.avatar-bg-overlay::before,
+.avatar-bg-overlay::after {
+  background-image: url("ass/img/logo.webp");
+  background-size: cover;
+  background-position: center;
+}
+
+
+  </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+
+    <div class="container" id="main-content">
+     <!-- Header Card -->
+      <div class="header-card fade-in">
+        <div class="header-bg"><div class="avatar-bg-overlay"></div></div>
+        <div class="header-content">
+          <div class="profile-section">
+            <div class="avatar-container" style="position: relative;">
+              <div class="avatar" style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                <img src="ass/img/logo.jpg" alt="Narons Beauty" style="width:100%; height:100%; object-fit: cover;">
+              </div>
+              <div class="status-indicator" style="position: absolute; bottom:4px; right:4px; width:16px; height:16px; background-color:#10b981; border:2px solid #fff; border-radius:50%;"></div>
+            </div>
+            <div class="profile-info">
+              <h1 class="band-name">Narons Beauty</h1>
+              <p class="band-title">متجر الجمال</p>
+              <p class="band-description">Narons Beauty يُقدم أفضل مستحضرات التجميل، المنتجات التخسيسية، والعناية بالبشرة والشعر بجودة عالية وأسعار مناسبة. دعونا نزيد جمالكِ ونوسعي ميزانياتك بعروضنا المميزة!</p>
+              <div class="location">
+                <i class="fas fa-map-marker-alt"></i> <span>الخليل - فلسطين</span> 
+              </div>
+            </div>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-item" data-target="200" data-suffix="+">
+              <div class="stat-icon"><i class="fas fa-spray-can-sparkles"></i></div>
+              <div class="stat-number" data-number="0">0</div>
+              <div class="stat-label">منتج تجميل & تخسيس</div>
+            </div>
+            <div class="stat-item" data-target="100" data-suffix="+">
+              <div class="stat-icon"><i class="fas fa-pump-soap"></i></div>
+              <div class="stat-number" data-number="0">0</div>
+              <div class="stat-label">زبون تجربة عناية</div>
+            </div>
+            <div class="stat-item" data-target="8000" data-suffix="+">
+              <div class="stat-icon"><i class="fas fa-heart"></i></div>
+              <div class="stat-number" data-number="0">0</div>
+              <div class="stat-label">متابع يقدر جمالكِ</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+       <!-- عنوان السلايدر -->
+      <div class="slider-header">
+        <h2 class="slider-title">أحدث منتجاتنا التجميلية</h2>
+        <p class="slider-subtitle">استكشف أحدث برامج التخسيس، مستحضرات التجميل، والمزيد من العناية بالشعر والبشرة لدينا</p>
+      </div>
+
+     <!-- السلايدر -->
+<div class="swiper">
+  <div class="swiper-wrapper">
+    <!-- بطاقة 1 - منتج تخسيس -->
+    <div class="swiper-slide">
+      <div class="product-card" style="position: relative; overflow: hidden; border-radius: 10px;">
+        <img src="ass/img/img4.jpg" alt="منتج تجميل للشفاه" style="width: 100%; height: 100%; object-fit: cover;">
+        <div class="discount-badge">خصم 10%</div>
+        <div class="product-content" style="position: absolute; bottom: 10px; left: 10px; color: #fff; text-shadow: 0 0 8px rgba(0,0,0,0.3);">
+          <h3 class="product-title">بلسم ترطيب الشفاه باللون</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- بطاقة 2 - فرشاة وصابون وحافظة -->
+    <div class="swiper-slide">
+      <div class="product-card" style="position: relative; overflow: hidden; border-radius: 10px;">
+        <video autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover;">
+          <source src="ass/vd/vd2.mp4" type="video/mp4">
+          متصفحك لا يدعم تشغيل الفيديو
+        </video>
+        <div class="product-content" style="position: absolute; bottom: 10px; left: 10px; color: #fff; text-shadow: 0 0 8px rgba(0,0,0,0.3);">
+          <h3 class="product-title">حقيبة تجميل فاخرة</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- بطاقة 3 - عناية بالشعر -->
+    <div class="swiper-slide">
+      <div class="product-card" style="position: relative; overflow: hidden; border-radius: 10px;">
+        <img src="ass/img/img1.jpg" alt="مستحضر عناية بالشعر" style="width: 100%; height: 100%; object-fit: cover;">
+        <div class="discount-badge">جديد</div>
+        <div class="product-content" style="position: absolute; bottom: 10px; left: 10px; color: #fff; text-shadow: 0 0 8px rgba(0,0,0,0.3);">
+          <h3 class="product-title">زيت ترطيب الشعر</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- بطاقة 4 - مكياج -->
+    <div class="swiper-slide">
+      <div class="product-card" style="position: relative; overflow: hidden; border-radius: 10px;">
+        <img src="ass/img/img3.webp" alt="ظلال عيون" style="width: 100%; height: 100%; object-fit: cover;">
+        <div class="product-content" style="position: absolute; bottom: 10px; left: 10px; color: #fff; text-shadow: 0 0 8px rgba(0,0,0,0.3);">
+          <h3 class="product-title">الوان عيون زاهية</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- بطاقة 5 - منتج تخسيس -->
+    <div class="swiper-slide">
+      <div class="product-card" style="position: relative; overflow: hidden; border-radius: 10px;">
+        <video autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover;">
+          <source src="ass/vd/vd1.mp4" type="video/mp4">
+          متصفحك لا يدعم تشغيل الفيديو
+        </video>
+        <div class="product-content" style="position: absolute; bottom: 10px; left: 10px; color: #fff; text-shadow: 0 0 8px rgba(0,0,0,0.3);">
+          <h3 class="product-title">مستحضر تخسيس متجانس</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- بطاقة 6 - كريم بشرة -->
+    <div class="swiper-slide">
+      <div class="product-card" style="position: relative; overflow: hidden; border-radius: 10px;">
+        <img src="ass/img/img2.webp" alt="كريم عناية بالبشرة" style="width: 100%; height: 100%; object-fit: cover;">
+        <div class="product-content" style="position: absolute; bottom: 10px; left: 10px; color: #fff; text-shadow: 0 0 8px rgba(0,0,0,0.3);">
+          <h3 class="product-title">كريم ترطيب البشرة</h3>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- الأسهم -->
+  <div class="swiper-button-next"></div>
+  <div class="swiper-button-prev"></div>
+
+  <!-- النقاط -->
+  <div class="swiper-pagination"></div>
+</div>
+
+      
+      <!-- Contact Links -->
+      <div class="contact-links">
+        <a class="contact-card phone-card" data-href="tel:0566552477">
+              <div class="contact-content">
+                  <div class="contact-left">
+                      <div class="contact-icon"><i class="fas fa-phone"></i></div>
+                      <div class="contact-text"><h3>اتصال مباشر</h3><p>0566552477</p></div>
+                  </div>
+                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
+              </div>
+          </a>
+
+          <a class="contact-card whatsapp-card" data-href="https://wa.me/972566552477">
+              <div class="contact-content">
+                  <div class="contact-left">
+                      <div class="contact-icon"><i class="fab fa-whatsapp"></i></div>
+                      <div class="contact-text"><h3>واتساب</h3><p>اطلب بدون تردد</p></div>
+                  </div>
+                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
+              </div>
+          </a>
+
+          <a class="contact-card email-card" data-href="mailto:info@naronsbeauty.com">
+              <div class="contact-content">
+                  <div class="contact-left">
+                      <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                      <div class="contact-text"><h3>البريد الإلكتروني</h3><p>استفسار عن المنتجات</p></div>
+                  </div>
+                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
+              </div>
+          </a>
+
+          <a class="contact-card instagram-card" data-href="https://www.instagram.com/naronsbeauty/">
+              <div class="contact-content">
+                  <div class="contact-left">
+                      <div class="contact-icon"><i class="fab fa-instagram"></i></div>
+                      <div class="contact-text"><h3>انستغرام</h3><p>احدث العروض والقشات</p></div>
+                  </div>
+                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
+              </div>
+          </a>
+
+
+
+          <a class="contact-card facebook-card" data-href="https://www.facebook.com/naronsbeauty">
+              <div class="contact-content">
+                  <div class="contact-left">
+                      <div class="contact-icon"><i class="fab fa-facebook-f"></i></div>
+                      <div class="contact-text"><h3>فيسبوك</h3><p>قوائم التجميل اليومية</p></div>
+                  </div>
+                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
+              </div>
+          </a>
+      </div>
+
+    <!-- خريطة الموقع -->
+      <div class="map-section">
+        <div class="map-card">
+          <div class="map-header">
+            <h2>فرع Narons Beauty في الخليل</h2>
+            <p>الخليل - فلسطين</p>
+          </div>
+          <div class="map-container">
+            <div id="map" style="height: 100%; width: 100%;"></div>
+            <div class="map-overlay">
+              <h3>Narons Beauty</h3>
+              <p><i class="fas fa-map-marker-alt"></i> الخليل - فلسطين</p>
+              <p><i class="fas fa-clock"></i> من 9 ص الى 8 م يومياً</p>
+              <p><i class="fas fa-phone"></i> +972 59 328 2000</p>
+              <a href="https://www.google.com/maps/search/?api=1&query=31.5304,35.0963" target="_blank">فتح في Google Maps</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer-card">
+        <div class="footer-content">
+          <p class="footer-title">© <span id="current-year"></span> Narons Beauty - جميع الحقوق محفوظة</p>
+          <p class="footer-subtitle">متجر تجميل وعناية بالجسم - الخليل - فلسطين - منتجات تجميل وتخسيس بأفضل الجودة والأسعار</p>
+          <div class="footer-status">
+            <div class="status-dot-small" style="background: #10b981; width: 12px; height: 12px; border-radius: 50%; margin-left: 6px;"></div>
+            <span>جاهز للطلبات والاستفسارات اليومية</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating WhatsApp Button -->
+      <div class="floating-whatsapp" style="background: #25d366;">
+        <a href="https://wa.me/972595xxxxxx" target="_blank" rel="noopener noreferrer" title="تواصل معنا عبر واتساب"><i class="fab fa-whatsapp"></i></a>
+      </div>
+
+      <script src="ass/js/map.js"></script>
+      <script src="ass/js/vv.js"></script>
+      <script src="ass/js/gg.js"></script>
+      <script src="ass/js/leaflet.js"></script>
+
+   <script>
+function initializeMap() {
+    try {
+        const latitude = 31.5304;
+        const longitude = 35.0963;
+        const map = L.map('map').setView([latitude, longitude], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        const marker = L.marker([latitude, longitude]).addTo(map);
+        marker.bindPopup("<b>Narons Beauty</b><br>متجر الجمال - الخليل فلسطين").openPopup();
+    } catch (error) {
+        console.error('Error initializing map:', error);
+        const mapContainer = document.getElementById('map');
+        if (mapContainer) {
+            mapContainer.innerHTML = `
+                <div class="map-error">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <p>عذراً، تعذر تحميل الخريطة</p>
+                    <p>يمكنك <a href="https://www.google.com/maps/search/?api=1&query=31.5304,35.0963" target="_blank">النقر هنا</a> لفتح الخريطة في نافذة جديدة</p>
+                </div>`;
+        }
+    }
+}
+</script>
+
+    </div>
+</body>
+</html>
