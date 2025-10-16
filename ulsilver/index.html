@@ -226,9 +226,9 @@
   bottom: 15px;
   right: 15px;
   z-index: 1000;
-  max-width: fit-content;
+  max-width: fit-content; /* Container width adjusts to content */
   display: flex;
-  align-items: center;
+  align-items: center; /* Vertically align items */
   border-radius: 12px;
   padding: 10px 15px;
   gap: 15px; /* Space between play button and volume control */
@@ -236,15 +236,11 @@
 cubic-bezier(.4, 0, .2, 1);
     animation: float 3s 
 ease-in-out infinite;
-
 }
-
-
-
 
 /* Play/Pause Toggle Button */
 .audio-toggle-btn {
-  background: linear-gradient(135deg, #10b981, #0a8f6a);
+  background: linear-gradient(135deg, #10b981, #0a8f6a); /* Green gradient */
   border: none;
   width: 55px;
   height: 55px;
@@ -254,55 +250,59 @@ ease-in-out infinite;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
-  color: #fff;
+  transition: all 0.3s ease; /* Smooth transitions */
+  color: #fff; /* White icon color */
   font-size: 22px;
-  flex-shrink: 0;
+  flex-shrink: 0; /* Prevent button from shrinking */
   width: 4rem;
-  height: 4rem;
+    height: 4rem;
 }
 
 .audio-toggle-btn:hover {
-  transform: scale(1.1);
+  transform: scale(1.1); /* Slightly enlarge on hover */
   box-shadow: 0 6px 15px rgba(0,0,0,0.3);
 }
 
 .audio-toggle-btn.playing {
-  background: linear-gradient(135deg, #ef4444, #dc2626); /* Different color when playing */
+  background: linear-gradient(135deg, #ef4444, #dc2626); /* Red gradient when playing */
 }
 
 .audio-toggle-btn i {
-  color: inherit;
+  color: inherit; /* Inherit color from parent button */
 }
 
 /* Volume Control Container */
 .volume-control {
   width: 150px; /* Fixed width for the volume slider */
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Volume bubble above slider */
   align-items: center;
   position: relative;
   height: 100%;
   justify-content: center;
-  opacity: 0; /* Start hidden */
-  pointer-events: none; /* Disable interaction when hidden */
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  transform: translateX(10px); /* Slight shift when hidden */
+  
+  /* Initial hidden state, controlled by JavaScript via 'hidden' class */
+  opacity: 1; /* Default to visible in CSS, JS will apply 'hidden' */
+  pointer-events: all; /* Default to interactive, JS will change */
+  transform: translateX(0); /* Default position */
+  transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth transition */
 }
 
-.volume-control.show {
-  opacity: 1; /* Show when 'show' class is added */
-  pointer-events: all; /* Enable interaction */
-  transform: translateX(0); /* Return to original position */
+/* Class to visually hide and disable interaction */
+.volume-control.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(10px); /* Move slightly right when hidden */
 }
+
 
 /* Volume Slider */
 #volume-slider {
-  appearance: none;
+  appearance: none; /* Remove default browser styling */
   -webkit-appearance: none;
   width: 100%;
   height: 8px;
-  background: #e0e0e0;
+  background: #e0e0e0; /* Light gray track */
   border-radius: 4px;
   outline: none;
   cursor: pointer;
@@ -313,15 +313,15 @@ ease-in-out infinite;
   -webkit-appearance: none;
   width: 24px;
   height: 24px;
-  background: #10b981;
+  background: #10b981; /* Green thumb */
   border-radius: 50%;
-  border: 4px solid #fff;
+  border: 4px solid #fff; /* White border for thumb */
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
   transition: background 0.3s ease;
 }
 
 #volume-slider::-webkit-slider-thumb:hover {
-  background: #0a8f6a;
+  background: #0a8f6a; /* Darker green on hover */
 }
 
 #volume-slider::-moz-range-thumb {
@@ -348,7 +348,7 @@ ease-in-out infinite;
   border-radius: 10px;
   font-size: 14px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  display: none;
+  display: none; /* Hidden by default, shown by JS */
   color: #333;
 }
 
@@ -357,17 +357,17 @@ ease-in-out infinite;
   position: absolute;
   top: -35px; /* Above the slider */
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%); /* Centered above slider */
   background: #10b981;
   color: #fff;
   font-weight: bold;
   padding: 5px 8px;
   border-radius: 8px;
   font-size: 13px;
-  opacity: 0;
+  opacity: 0; /* Hidden by default, shown by JS */
   transition: all 0.3s ease;
-  pointer-events: none;
-  min-width: 40px;
+  pointer-events: none; /* Prevents interaction with bubble */
+  min-width: 40px; /* Ensures consistent width for numbers */
   text-align: center;
 }
 
@@ -406,35 +406,34 @@ ease-in-out infinite;
     padding: 8px 12px;
   }
   #volume-bubble {
-    top: -30px;
+    top: -35px;
     font-size: 12px;
     padding: 4px 7px;
   }
 }
-
-
   </style>
 </head>
 <body>
 
 
-<!-- Audio Player -->
-<div class="audio-player-container">
+ <!-- Audio Player -->
+ <div class="audio-player-container">
   <audio id="bg-music" loop>
       <source src="ass/music/uls.mp3" type="audio/mpeg">
       متصفحك لا يدعم تشغيل الملفات الصوتية.
   </audio>
 
-  <button id="audio-toggle" class="audio-toggle-btn" style="transform: scale(1.1) rotate(5deg);">
+  <button id="audio-toggle" class="audio-toggle-btn">
       <i class="fas fa-music"></i> <!-- أيقونة الموسيقى الافتراضية -->
   </button>
 
-  <div class="volume-control" id="volume-control">
-      <div id="volume-bubble"></div> <!-- فقاعة نسبة الصوت -->
+  <!-- Volume control starts hidden for non-iOS, always visible for iOS -->
+  <div class="volume-control hidden" id="volume-control"> 
+      <div id="volume-bubble"></div> <!-- Volume percentage bubble -->
       <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.5">
   </div>
 
-  <div id="audio-status"></div> <!-- رسالة الحالة المنبثقة -->
+  <div id="audio-status"></div> <!-- Status pop-up message -->
 </div>
 
     <div class="bg-pattern"></div>
@@ -926,63 +925,79 @@ window.addEventListener('load', () => {
   const volumeBubble = document.getElementById('volume-bubble');
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
+  // Initialize audio volume and slider position
   audio.volume = 0.5;
   volumeSlider.value = 0.5;
 
   let volumeControlHideTimeout; // To store the timeout ID for hiding volume control
 
+  // --- Utility Functions ---
+
   function showStatus(msg) {
     audioStatus.textContent = msg;
     audioStatus.style.display = 'block';
-    setTimeout(() => audioStatus.style.display = 'none', 4000);
+    setTimeout(() => audioStatus.style.display = 'none', 4000); // Hide after 4 seconds
   }
 
   function showVolumeBubble(value) {
     volumeBubble.textContent = value + '%';
     volumeBubble.classList.add('show');
-    clearTimeout(volumeBubble.hideTimeout);
+    clearTimeout(volumeBubble.hideTimeout); // Clear previous bubble hide timeout
     volumeBubble.hideTimeout = setTimeout(() => {
       volumeBubble.classList.remove('show');
-    }, 1500);
+    }, 1500); // Hide bubble after 1.5 seconds
   }
 
-  // Function to show the volume control
+  // --- Volume Control Visibility Logic ---
+
   function showVolumeControl() {
     clearTimeout(volumeControlHideTimeout); // Clear any existing hide timeout
-    volumeControl.classList.add('show');
+    volumeControl.classList.remove('hidden'); // Show the volume control
+
     // Set a new timeout to hide the volume control after 5 seconds of inactivity
-    volumeControlHideTimeout = setTimeout(() => {
-      if (!audio.paused) { // Only hide if music is still playing
-         volumeControl.classList.remove('show');
-      }
-    }, 5000); // 5 seconds
+    // This timer only applies to non-iOS devices
+    if (!isIOS) {
+        volumeControlHideTimeout = setTimeout(() => {
+            if (!audio.paused) { // Only hide if music is still playing
+                volumeControl.classList.add('hidden'); // Hide the volume control
+            }
+        }, 5000); // 5 seconds
+    }
   }
 
-  // Function to hide the volume control
   function hideVolumeControl() {
     clearTimeout(volumeControlHideTimeout); // Clear any hide timeout
-    volumeControl.classList.remove('show');
+    volumeControl.classList.add('hidden'); // Hide the volume control
   }
 
-  // Initial attempt to autoplay or show instructions
+  // --- Initial Setup and Autoplay Attempt ---
+
   function tryAutoPlay() {
     if (isIOS) {
+      // On iOS, autoplay is restricted and volume control is via device buttons.
+      // We make the volume control always visible but inform the user.
       showStatus('اضغط على الأيقونة لتشغيل الموسيقى 🔊 (التحكم بالصوت عبر أزرار الجهاز)');
-      // For iOS, always show the volume control, but disable interaction
-      volumeControl.classList.add('show');
-      volumeControl.style.pointerEvents = 'none';
-      volumeSlider.disabled = true;
+      volumeControl.classList.remove('hidden'); // Ensure volume control is visible on iOS
+      // On iOS, the slider can still be visually moved, but it won't affect the audio.
+      // We keep it enabled so the user can interact, and the status message guides them.
+      // We don't need to disable `pointer-events` for the container either.
     } else {
+      // Attempt autoplay for non-iOS devices
       audio.play().then(() => {
         toggleBtn.classList.add('playing');
         toggleBtn.querySelector('i').className = 'fas fa-pause';
         showVolumeControl(); // Show volume control on successful autoplay
-      }).catch(() => showStatus('اضغط على الأيقونة لتشغيل الموسيقى 🎵'));
+      }).catch(() => {
+        // Autoplay failed (e.g., muted autoplay allowed, but full autoplay requires user interaction)
+        showStatus('اضغط على الأيقونة لتشغيل الموسيقى 🎵');
+        hideVolumeControl(); // Keep it hidden until user interaction
+      });
     }
   }
   tryAutoPlay();
 
-  // Event listener for play/pause button
+  // --- Event Listeners ---
+
   toggleBtn.addEventListener('click', function() {
     if (audio.paused) {
       audio.play().then(() => {
@@ -995,10 +1010,11 @@ window.addEventListener('load', () => {
       audio.pause();
       toggleBtn.classList.remove('playing');
       toggleBtn.querySelector('i').className = 'fas fa-music';
-      hideVolumeControl(); // Hide volume control when paused
-      if (isIOS) { // On iOS, indicate volume control is via device buttons
-        showStatus('تحكم في الصوت عبر أزرار الجهاز 🔈');
+      // Hide volume control only on non-iOS devices when paused
+      if (!isIOS) {
+          hideVolumeControl();
       }
+      showStatus('تم إيقاف الموسيقى'); // Show message when paused
     }
   });
 
@@ -1012,39 +1028,44 @@ window.addEventListener('load', () => {
       showVolumeControl(); // Reset hide timeout on interaction with slider
     });
 
-    // Event listeners to keep volume control visible on hover/touch
+    // Event listeners to keep volume control visible on hover/touch interaction
     volumeControl.addEventListener('mouseenter', showVolumeControl);
     volumeControl.addEventListener('mouseleave', () => {
-        if (!audio.paused) {
+        if (!audio.paused) { // Only attempt to hide if music is playing
             volumeControlHideTimeout = setTimeout(() => {
-                volumeControl.classList.remove('show');
-            }, 1000); // Faster hide after mouse leaves
+                volumeControl.classList.add('hidden'); // Hide faster after mouse leaves
+            }, 1000);
         }
     });
-    volumeControl.addEventListener('touchstart', showVolumeControl);
-    volumeControl.addEventListener('touchend', () => {
-        if (!audio.paused) {
+    volumeControl.addEventListener('touchstart', showVolumeControl); // Mobile touch start
+    volumeControl.addEventListener('touchend', () => { // Mobile touch end
+        if (!audio.paused) { // Only attempt to hide if music is playing
             volumeControlHideTimeout = setTimeout(() => {
-                volumeControl.classList.remove('show');
-            }, 2000); // Slightly longer hide for touch
+                volumeControl.classList.add('hidden'); // Hide slightly longer for touch
+            }, 2000);
         }
     });
 
-    // Load saved volume
+    // Load saved volume preference from local storage
     const savedVolume = localStorage.getItem('audioVolume');
     if (savedVolume) {
       audio.volume = parseFloat(savedVolume);
       volumeSlider.value = savedVolume;
     }
   } else {
-    // For iOS, the slider is mostly for display (volume controlled by device)
+    // --- iOS Specific Logic ---
+    // On iOS, the slider is visually present, but actual volume control is via device buttons.
     volumeSlider.addEventListener('input', () => {
+      // Provide user feedback that volume is controlled externally
       showStatus('تحكم في الصوت عبر أزرار الجهاز 🔈');
-      // On iOS, audio.volume might not update immediately from slider input
-      // so we show the current actual volume from the audio object.
+      // Update bubble with current actual volume from audio object, not slider value
       showVolumeBubble(Math.round(audio.volume * 100));
+      // Keep volume control visible on iOS during interaction
+      showVolumeControl(); // Reset timeout (though it won't auto-hide on iOS)
     });
-    // For iOS, as established in tryAutoPlay(), the volumeControl is always shown but disabled
+    
+    // Ensure the volume control is always visible for iOS
+    volumeControl.classList.remove('hidden'); 
   }
 });
           </script>
