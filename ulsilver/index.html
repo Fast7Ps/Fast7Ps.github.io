@@ -12,9 +12,9 @@
   <meta name="theme-color" content="#ec4899" />
   <link rel="icon" type="image/png" href="ass/img/logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="ass/css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
   /* Header والخلفيات */
 .map-header,
@@ -218,19 +218,19 @@
 
 
 
-/* تصميم متجاوب و مناسب للهواتف */
+/* 🎵 تصميم متجاوب ومناسب للهواتف */
 .audio-player-container {
   position: fixed;
-  bottom: 15px; /* مسافة أقل من الحافة للهواتف */
+  bottom: 15px;
   right: 15px;
   z-index: 1000;
-  max-width: 90%; /* أقصى عرض للهواتف الصغيرة */
+  max-width: 90%;
 }
 
 .audio-toggle-btn {
   background: rgba(255, 255, 255, 0.95);
   border: none;
-  width: 60px; /* حجم أكبر للسهولة على الهواتف */
+  width: 60px;
   height: 60px;
   border-radius: 50%;
   cursor: pointer;
@@ -248,7 +248,7 @@
 }
 
 .audio-toggle-btn i {
-  font-size: 24px; /* حجم أكبر للأيقونة */
+  font-size: 24px;
   color: #333;
 }
 
@@ -266,8 +266,8 @@
 }
 
 #volume-slider {
-  width: 100%; /* يأخذ العرض الكامل على الهواتف */
-  height: 8px; /* سماء أكبر للسهولة */
+  width: 100%;
+  height: 8px;
   background: #ddd;
   border-radius: 4px;
   outline: none;
@@ -277,7 +277,7 @@
 
 #volume-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 24px; /* حجم أكبر للشريط السحبي */
+  width: 24px;
   height: 24px;
   background: #10b981;
   border-radius: 50%;
@@ -294,10 +294,23 @@
   border: none;
 }
 
+/* الرسالة المنبثقة */
+#audio-status {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  display: none;
+}
+
 /* تحسين للشاشات الصغيرة */
 @media screen and (max-width: 480px) {
   .audio-player-container {
-    right: 10px; /* مسافة أقل من الجانب */
+    right: 10px;
     bottom: 10px;
   }
   
@@ -328,7 +341,7 @@
 </head>
 <body>
 
-<!-- Audio Player for Mobile -->
+<!-- 🎧 مشغل الموسيقى -->
 <div class="audio-player-container">
   <audio id="bg-music" loop>
     <source src="ass/music/uls.mp3" type="audio/mpeg">
@@ -343,11 +356,9 @@
     <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.5">
   </div>
   
-  <!-- رسالة بسيطة إذا فشل التشغيل التلقائي -->
-  <div id="audio-status" style="position: fixed; bottom: 90px; right: 20px; background: rgba(255, 255, 255, 0.9); padding: 8px 12px; border-radius: 5px; font-size: 12px; display: none;">
-    اضغط على الأيقونة لتشغيل الموسيقى
-  </div>
+  <div id="audio-status"></div>
 </div>
+
   
     <div class="bg-pattern"></div>
 
@@ -829,48 +840,45 @@ window.addEventListener('load', () => {
         });
         </script>
         <script>
-      document.addEventListener('DOMContentLoaded', function() {
+     document.addEventListener('DOMContentLoaded', function() {
   const audio = document.getElementById('bg-music');
   const toggleBtn = document.getElementById('audio-toggle');
   const volumeControl = document.getElementById('volume-control');
   const volumeSlider = document.getElementById('volume-slider');
   const audioStatus = document.getElementById('audio-status');
-  
-  // تعيين مستوى الصوت الافتراضي
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
   audio.volume = 0.5;
-  
-  // محاولة تشغيل الصوت تلقائياً
+  volumeSlider.value = 0.5;
+
+  // دالة عرض الرسالة المؤقتة
+  function showStatus(msg) {
+    audioStatus.textContent = msg;
+    audioStatus.style.display = 'block';
+    setTimeout(() => {
+      audioStatus.style.display = 'none';
+    }, 4000);
+  }
+
+  // محاولة التشغيل التلقائي
   function tryAutoPlay() {
-    // في iOS، قد تحتاج إلى استخدام play() بعد تفاعل المستخدم
-    if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-      // تحديد المستخدم على جهاز iOS
-      setTimeout(() => {
-        audioStatus.style.display = 'block';
-        // إخفاء الرسالة بعد 5 ثوان
-        setTimeout(() => {
-          audioStatus.style.display = 'none';
-        }, 5000);
-      }, 1000);
+    if (isIOS) {
+      showStatus('اضغط على الأيقونة لتشغيل الموسيقى 🔊 (التحكم بالصوت عبر أزرار الجهاز)');
+      volumeControl.style.display = 'flex'; // نظهر الشريط شكليًا
     } else {
-      // لمستخدمي أجهزة أخرى، حاول التشغيل التلقائي
       audio.play().then(() => {
         toggleBtn.classList.add('playing');
         toggleBtn.querySelector('i').className = 'fas fa-pause';
         volumeControl.style.display = 'flex';
-      }).catch(error => {
-        console.log('Autoplay prevented:', error);
-        audioStatus.style.display = 'block';
-        setTimeout(() => {
-          audioStatus.style.display = 'none';
-        }, 5000);
+      }).catch(() => {
+        showStatus('اضغط على الأيقونة لتشغيل الموسيقى 🎵');
       });
     }
   }
-  
-  // عند تحميل الصفحة، حاول تشغيل الصوت
+
   tryAutoPlay();
-  
-  // عند النقر على أيقونة الصوت
+
+  // زر التشغيل والإيقاف
   toggleBtn.addEventListener('click', function() {
     if (audio.paused) {
       audio.play().then(() => {
@@ -878,6 +886,8 @@ window.addEventListener('load', () => {
         toggleBtn.querySelector('i').className = 'fas fa-pause';
         volumeControl.style.display = 'flex';
         audioStatus.style.display = 'none';
+      }).catch(() => {
+        showStatus('تعذّر تشغيل الصوت، اضغط مجددًا');
       });
     } else {
       audio.pause();
@@ -886,33 +896,30 @@ window.addEventListener('load', () => {
       volumeControl.style.display = 'none';
     }
   });
-  
-  // التحكم في مستوى الصوت
-  volumeSlider.addEventListener('input', function() {
-    // استخدام قيم بين 0 و 1 بدلاً من 0 إلى 100
-    audio.volume = parseFloat(this.value);
-    
-    // تحديث قيمة الشريط المرئي ليعكس النسبة المئوية
-    const percentage = Math.round(this.value * 100);
-    this.setAttribute('data-value', percentage);
-  });
-  
-  // تعديل الوضع الأفقي للهواتف
-  if (window.innerWidth < 768) {
+
+  // التحكم في الصوت (Android & Windows)
+  if (!isIOS) {
+    volumeSlider.addEventListener('input', function() {
+      audio.volume = parseFloat(this.value);
+      localStorage.setItem('audioVolume', this.value);
+    });
+
+    const savedVolume = localStorage.getItem('audioVolume');
+    if (savedVolume) {
+      audio.volume = parseFloat(savedVolume);
+      volumeSlider.value = savedVolume;
+    }
+  } else {
+    // في iOS: عرض رسالة عند محاولة تغيير الصوت
+    volumeSlider.addEventListener('input', () => {
+      showStatus('تحكم في الصوت عبر أزرار الجهاز 🔈');
+    });
+  }
+
+  // تحسين للشاشات الصغيرة
+  if (window.innerWidth < 768 && !isIOS) {
     volumeControl.style.width = '90%';
   }
-  
-  // حفظ حالة الصوت في التخزين المحلي
-  const savedVolume = localStorage.getItem('audioVolume');
-  if (savedVolume) {
-    audio.volume = parseFloat(savedVolume);
-    volumeSlider.value = savedVolume;
-  }
-  
-  // حفظ مستوى الصوت عند التغيير
-  volumeSlider.addEventListener('change', function() {
-    localStorage.setItem('audioVolume', this.value);
-  });
 });
           </script>
 
