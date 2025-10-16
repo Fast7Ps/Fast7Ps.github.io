@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+ <!-- Swiper -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>هديتك أرقى مع Jewellery UL</title>
+    <meta name="description" content="مجوهرات UL - متجر متخصص في المجوهرات الفاخرة والفضة والساعات والهدايا. ثقة تضمنها وانت مرتاح البال. نوصّل لكل الخريطة فلسطينية فريقنا معكم على مدار الساعة⏰" />
+  <meta name="keywords" content="مجوهرات UL, مجوهرات فاخرة, فضة, ساعات, هدايا, إكسسوارات, الخليل, فلسطين, مجوهرات ذهب, مجوهرات platinum, مجوهرات عصرية" />
+  <meta name="theme-color" content="#ec4899" />
+  <link rel="icon" type="image/png" href="ass/img/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="ass/css/style.css" />
+  <style>
+  /* Header والخلفيات */
+.map-header,
+.header-bg {
+  background: linear-gradient(135deg, #0c1156 0%, #110e44 50%, #191557 100%);
+}
+
+/* أزرار الأسهم */
+.swiper-button-next,
+.swiper-button-prev {
+  background: rgb(255 255 255 / 80%);
+  color: #191557;
+  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.15);
+}
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background: #191557;
+  color: #fff;
+  box-shadow: 0 4px 13px rgba(236, 72, 153, 0.28);
+}
+
+/* تدرجات الأرقام والعناوين */
+.stat-number::after,
+.slider-title::after {
+  background: linear-gradient(135deg, #ff8800, #ffaa33);
+}
+
+/* Overlay الشعار */
+.avatar-bg-overlay::before,
+.avatar-bg-overlay::after {
+  background-image: url("ass/img/logo.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+/* نمط البطاقات في السلايدر */
+.product-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.product-card video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-content {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  color: #fff;
+  text-shadow: 0 0 8px rgba(0,0,0,0.3);
+  z-index: 2;
+}
+
+.discount-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #ec4899;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 2;
+}
+
+/* نمط الطبقة المنبثقة للمنتج */
+.product-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.8);
+  z-index: 1000;
+  overflow-y: auto;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background-color: white;
+  margin: 5% auto;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 600px;
+  position: relative;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.close-modal {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #191557;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.close-modal:hover {
+  transform: scale(1.2);
+}
+
+.modal-product-video {
+  width: 100%;
+  height: 600px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.modal-product-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #191557;
+  margin-bottom: 10px;
+}
+
+.modal-product-price {
+  font-size: 20px;
+  color: #ec4899;
+  margin-bottom: 15px;
+}
+
+.modal-product-description {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.modal-product-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.modal-product-link {
+  background: linear-gradient(135deg, #0c1156 0%, #110e44 50%, #191557 100%);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.modal-product-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(23, 21, 87, 0.4);
+}
+
+.modal-product-whatsapp {
+  background: #25d366;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.modal-product-whatsapp:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+}
+
+
+  </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+
+    <div class="container" id="main-content">
+     <!-- Header Card -->
+      <div class="header-card fade-in">
+        <div class="header-bg"><div class="avatar-bg-overlay"></div></div>
+        <div class="header-content">
+          <div class="profile-section">
+            <div class="avatar-container" style="position: relative;">
+              <div class="avatar" style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                <img src="ass/img/logo.png" alt="Narons Beauty" style="width:100%; height:100%; object-fit: cover;">
+              </div>
+              <div class="status-indicator" style="position: absolute; bottom:4px; right:4px; width:16px; height:16px; background-color:#10b981; border:2px solid #fff; border-radius:50%;"></div>
+            </div>
+            <div class="profile-info">
+              <h1 class="band-name">مجوهرات Jewellery UL</h1>
+              <p class="band-title">ما كتبنا وصف.. خليناه إحساس</p>
+              <p class="band-description"> فضة-ساعات-هداياوإكسسوارات...|
+                ثقة تضمنها وانت مرتاح البال | نوصّل لكل الخريطة
+                فريقنا معكم على مدار الساعة⏰</p>
+              <div class="location">
+                <i class="fas fa-map-marker-alt"></i> <span>الخليل - فلسطين</span> 
+              </div>
+            </div>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-item" data-target="200" data-suffix="+">
+              <div class="stat-icon"><i class="fas fa-gem"></i></div>
+              <div class="stat-number" data-number="0">0</div>
+              <div class="stat-label">قطعة مجوهرات فاخرة</div>
+            </div>
+            <div class="stat-item" data-target="100" data-suffix="+">
+              <div class="stat-icon"><i class="fas fa-gift"></i></div>
+              <div class="stat-number" data-number="0">0</div>
+              <div class="stat-label">هدية فاخرة</div>
+            </div>
+            <div class="stat-item" data-target="8000" data-suffix="+">
+              <div class="stat-icon"><i class="fas fa-heart"></i></div>
+              <div class="stat-number" data-number="0">0</div>
+              <div class="stat-label">عميل يثق بجودتنا</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+       <!-- عنوان السلايدر -->
+      <div class="slider-header">
+        <h2 class="slider-title">أحدث قطع المجوهرات لدينا</h2>
+        <p class="slider-subtitle">استكشف أحدث الهدايا الفاخرة،  والمزيد من المجوهرات  لدينا</p>
+      </div>
+
+     <!-- السلايدر -->
+<div class="swiper">
+  <div class="swiper-wrapper">
+    <!-- بطاقة 1 - منتج مجوهرات -->
+    <div class="swiper-slide">
+      <div class="product-card" data-product-id="1">
+        <video autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover;">
+          <source src="ass/vd/vd1.mp4" type="video/mp4">
+          متصفحك لا يدعم تشغيل الفيديو
+        </video>
+        <div class="discount-badge">جديد</div>
+        <div class="product-content">
+          <p class="product-price">شاهد المنتج</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- بطاقة 2 - خاتم ألماس -->
+    <div class="swiper-slide">
+      <div class="product-card" data-product-id="2">
+        <video autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover;">
+          <source src="ass/vd/vd2.mp4" type="video/mp4">
+          متصفحك لا يدعم تشغيل الفيديو
+        </video>
+        <div class="product-content">
+          <h3 class="product-title">شاهد المنتج</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- بطاقة 3 - سوار فضي -->
+    <div class="swiper-slide">
+      <div class="product-card" data-product-id="3">
+        <video autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover;">
+          <source src="ass/vd/vd3.mp4" type="video/mp4">
+          متصفحك لا يدعم تشغيل الفيديو
+        </video>
+        <div class="discount-badge">خصم 20%</div>
+        <div class="product-content">
+          <h3 class="product-title">شاهد المنتج</h3>
+        </div>
+      </div>
+    </div>
+    
+    <!-- بطاقة 4 - إصبعية ذهب -->
+    <div class="swiper-slide">
+      <div class="product-card" data-product-id="4">
+        <video autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover;">
+          <source src="ass/vd/vd4.mp4" type="video/mp4">
+          متصفحك لا يدعم تشغيل الفيديو
+        </video>
+        <div class="product-content">
+          <h3 class="product-title">شاهد المنتج</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- بطاقة 5 - نظارة ذهبية -->
+    <div class="swiper-slide">
+      <div class="product-card" data-product-id="5">
+        <video autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover;">
+          <source src="ass/vd/vd5.mp4" type="video/mp4">
+          متصفحك لا يدعم تشغيل الفيديو
+        </video>
+        <div class="discount-badge">مميز</div>
+        <div class="product-content">
+          <h3 class="product-title">شاهد المنتج</h3>
+          
+        </div>
+      </div>
+    </div>
+
+    <!-- بطاقة 6 - سوار ذكي -->
+    <div class="swiper-slide">
+      <div class="product-card" data-product-id="6">
+        <video autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover;">
+          <source src="ass/vd/vd6.mp4" type="video/mp4">
+          متصفحك لا يدعم تشغيل الفيديو
+        </video>
+        <div class="product-content">
+          <h3 class="product-title">شاهد المنتج</h3>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- الأسهم -->
+  <div class="swiper-button-next"></div>
+  <div class="swiper-button-prev"></div>
+
+  <!-- النقاط -->
+  <div class="swiper-pagination"></div>
+</div>
+
+<!-- الطبقة المنبثقة للمنتج -->
+<div id="productModal" class="product-modal">
+  <div class="modal-content">
+    <span class="close-modal">&times;</span>
+    <video id="modalProductVideo" class="modal-product-video" controls autoplay muted>
+      <source src="" type="video/mp4">
+      متصفحك لا يدعم تشغيل الفيديو
+    </video>
+    <h2 id="modalProductTitle" class="modal-product-title"></h2>
+    <p id="modalProductPrice" class="modal-product-price"></p>
+    <p id="modalProductDescription" class="modal-product-description"></p>
+    <div class="modal-product-buttons">
+      <a id="modalProductLink" class="modal-product-link" href="#" target="_blank">
+        <i class="fas fa-external-link-alt"></i>
+        عرض المنتج
+      </a>
+      <a id="modalProductWhatsapp" class="modal-product-whatsapp" href="#" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+        استفسار عبر واتساب
+      </a>
+    </div>
+  </div>
+</div>
+      
+      <!-- Contact Links -->
+      <div class="contact-links">
+        <a class="contact-card phone-card" data-href="tel:0566301765">
+              <div class="contact-content">
+                  <div class="contact-left">
+                      <div class="contact-icon"><i class="fas fa-phone"></i></div>
+                      <div class="contact-text"><h3>اتصال مباشر</h3><p>0566301765</p></div>
+                  </div>
+                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
+              </div>
+          </a>
+
+          <a class="contact-card whatsapp-card" data-href="https://wa.me/972566301765">
+              <div class="contact-content">
+                  <div class="contact-left">
+                      <div class="contact-icon"><i class="fab fa-whatsapp"></i></div>
+                      <div class="contact-text"><h3>واتساب</h3><p>اطلب بدون تردد</p></div>
+                  </div>
+                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
+              </div>
+          </a>
+
+          <a class="contact-card email-card" data-href="http://ulsilver.com">
+              <div class="contact-content">
+                  <div class="contact-left">
+                      <div class="contact-icon"><i class="fas fa-globe"></i></div>
+                      <div class="contact-text"><h3>موقع إلكتروني</h3><p>www.ulsilver.com</p></div>
+                  </div>
+                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
+              </div>
+          </a>
+
+          <a class="contact-card instagram-card" data-href="https://www.instagram.com/uljewellery1/">
+              <div class="contact-content">
+                  <div class="contact-left">
+                      <div class="contact-icon"><i class="fab fa-instagram"></i></div>
+                      <div class="contact-text"><h3>انستغرام</h3><p>أحدث القطع الفاخرة</p></div>
+                  </div>
+                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
+              </div>
+          </a>
+          <a class="contact-card tiktok-card" data-href="https://www.tiktok.com/uljewellery1/">
+            <div class="contact-content">
+                <div class="contact-left">
+                    <div class="contact-icon"><i class="fab fa-tiktok"></i></div>
+                    <div class="contact-text"><h3>تيكتوك</h3><p>أحدث القطع الفاخرة</p></div>
+                </div>
+                <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
+            </div>
+        </a>
+
+
+
+          <a class="contact-card facebook-card" data-href="https://www.facebook.com/ulJewelery">
+              <div class="contact-content">
+                  <div class="contact-left">
+                      <div class="contact-icon"><i class="fab fa-facebook-f"></i></div>
+                      <div class="contact-text"><h3>فيسبوك</h3><p>مجموعة المجوهرات اليومية</p></div>
+                  </div>
+                  <div class="contact-arrow"><i class="fas fa-chevron-left"></i></div>
+              </div>
+          </a>
+      </div>
+
+    <!-- خريطة الموقع -->
+    <div class="map-section">
+      <div class="map-card">
+        <div class="map-header">
+          <h2>فرع Jewellery UL مجوهرات في الخليل</h2>
+          <p>الخليل - فلسطين</p>
+        </div>
+        <div class="map-container">
+          <div id="map" style="height: 100%; width: 100%;"></div>
+          <div class="map-overlay">
+            <h3>Jewellery UL مجوهرات              </h3>
+            <p><i class="fas fa-map-marker-alt"></i> الخليل - فلسطين</p>
+            <p><i class="fas fa-clock"></i> من 9 ص الى 8 م يومياً</p>
+            <p><i class="fas fa-phone"></i> +972 59 328 2000</p>
+            <a href="https://www.google.com/maps/search/?api=1&query=31.5304,35.0963" target="_blank">فتح في Google Maps</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- Footer -->
+<div class="footer-card">
+  <div class="footer-content">
+    <p class="footer-title">© <span id="current-year"></span> Jewellery UL مجوهرات - جميع الحقوق محفوظة</p>
+    <p class="footer-subtitle">مجوهرات فاخرة | فضة | ساعات | هدايا وإكسسوارات | نوصّل لكل الخريطة الفلسطينية</p>
+    <div class="footer-status">
+      <div class="status-dot-small" style="background: #10b981; width: 12px; height: 12px; border-radius: 50%; margin-left: 6px;"></div>
+      <span>جاهز للطلبات والاستفسارات اليومية</span>
+    </div>
+  </div>
+</div>
+     
+
+      <!-- Floating WhatsApp Button -->
+      <div class="floating-whatsapp" >
+        <a href="https://wa.me/972566301765" target="_blank" rel="noopener noreferrer" title="تواصل معنا عبر واتساب"><i class="fab fa-whatsapp"></i></a>
+      </div>
+
+      <script src="ass/js/map.js"></script>
+      <script src="ass/js/vv.js"></script>
+      <script src="ass/js/gg.js"></script>
+      <script src="ass/js/leaflet.js"></script>
+
+<!-- ضيف هذا في <head> -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  
+
+      <script>
+        // دالة تهيئة الخريطة
+        function initializeMap() {
+  const mapContainer = document.getElementById('map');
+  if (!mapContainer) return console.warn('عنصر الخريطة غير موجود');
+
+  // تأكد أن العنصر مرئي وله ارتفاع
+  if (mapContainer.offsetHeight === 0) {
+    mapContainer.style.height = '300px';
+  }
+
+  try {
+    const latitude = 31.5304;
+    const longitude = 35.0963;
+
+    // إذا الخريطة كانت محمّلة سابقًا نحذفها
+    if (mapContainer._leaflet_id) {
+      mapContainer._leaflet_id = null;
+      mapContainer.innerHTML = "";
+    }
+
+    const map = L.map('map').setView([latitude, longitude], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    const marker = L.marker([latitude, longitude]).addTo(map);
+    marker.bindPopup("<b>Jewellery UL مجوهرات</b><br>الخليل - فلسطين").openPopup();
+
+  } catch (error) {
+    console.error("Error initializing map:", error);
+    mapContainer.innerHTML = `
+      <div style="text-align:center;padding:20px;">
+        <p>عذرًا، تعذر تحميل الخريطة.</p>
+        <a href="https://www.google.com/maps/search/?api=1&query=31.5304,35.0963" target="_blank">
+          افتح الخريطة في Google Maps
+        </a>
+      </div>`;
+  }
+}
+
+// تحميل بعد التأكد من وجود العنصر وظهوره
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    initializeMap();
+  }, 500); // تأخير بسيط لضمان أن العنصر ظهر
+});
+        
+        // بيانات المنتجات
+        const products = {
+          1: {
+            title: "اسوراة تنس فل زركون",
+            description:
+              "سارع الأكثر طلباً! فقط 14 قطعة متبقية في المخزن!",
+            videoSrc: "ass/vd/vd1.mp4",
+            link: "https://ulsilver.com/products/asora-tns-fl-zrkon",
+            whatsapp:
+              "https://wa.me/972566301765?text=أنا مهتم بشراء القلادة الذهبية الفاخرة"
+          },
+          2: {
+            title: "طقم هديا باندورا باللون أبيض فضة 925",
+            
+            description:
+              "سارع! فقط 9 قطعة متبقية في المخزن!",
+            videoSrc: "ass/vd/vd2.mp4",
+            link: "https://ulsilver.com/products/tkm-hdya-bandora-ballon-abyd-fd-925",
+            whatsapp:
+              "https://wa.me/972566301765?text=أنا مهتم بشراء الخاتم الألماسي الراقي"
+          },
+          3: {
+            title: "طقم الهدايا - قلب ابيض فل زركون",
+            
+            description:
+              "سارع! فقط 6 قطعة متبقية في المخزن!",
+            videoSrc: "ass/vd/vd3.mp4",
+            link: "https://ulsilver.com/products/tkm-alhdaya-klb-abyd-fl-zrkon",
+            whatsapp:
+              "https://wa.me/972566301765?text=أنا مهتم بشراء السوار الفضي العصري"
+          },
+          4: {
+            title: "طقم الهدايا - كرستال ازرق فل زركون",
+            
+            description:
+            "سارع! فقط 6 قطعة متبقية في المخزن!",
+            videoSrc: "ass/vd/vd4.mp4",
+            link: "https://ulsilver.com/products/tkm-alhdaya-krstal-azrk-fl-zrkon",
+            whatsapp:
+              "https://wa.me/972566301765?text=أنا مهتم بشراء الإصبعية الذهبية الكلاسيكية"
+          },
+          5: {
+            title: "طقم الهدايا - باندورا كرستال أحمر فل زركون A+",
+            description:
+              "سارع! فقط 7 قطعة متبقية في المخزن!",
+            videoSrc: "ass/vd/vd5.mp4",
+            link: "https://ulsilver.com/products/tkm-alhdaya-bandora-krstal-ahmr-fl-zrkon-a",
+            whatsapp:
+              "https://wa.me/972566301765?text=أنا مهتم بشراء النظارات الذهبية الراقية"
+          },
+          6: {
+            title: "طقم مميز ستانلس ستيل",
+            
+            description:
+              "سارع! فقط 8 قطعة متبقية في المخزن!",
+            videoSrc: "ass/vd/vd6.mp4",
+            link: "https://ulsilver.com/products/tkm-mmyz-stanls-styl-1",
+            whatsapp:
+              "https://wa.me/972566301765?text=أنا مهتم بشراء السوار الذكي الفاخر"
+          }
+        };
+        
+        // دالة إعداد المودال
+        function setupProductModal() {
+          const productCards = document.querySelectorAll(".product-card");
+          const modal = document.getElementById("productModal");
+          const closeModal = document.querySelector(".close-modal");
+          const modalVideo = document.getElementById("modalProductVideo");
+        
+          productCards.forEach(card => {
+            card.addEventListener("click", function() {
+              const productId = this.getAttribute("data-product-id");
+              const product = products[productId];
+        
+              if (product) {
+                modalVideo.querySelector("source").src = product.videoSrc;
+                modalVideo.load();
+        
+                document.getElementById("modalProductTitle").textContent = product.title;
+                document.getElementById("modalProductPrice").textContent = product.price;
+                document.getElementById("modalProductDescription").textContent =
+                  product.description;
+                document.getElementById("modalProductLink").href = product.link;
+                document.getElementById("modalProductWhatsapp").href = product.whatsapp;
+        
+                modal.style.display = "block";
+        
+                const video = this.querySelector("video");
+                if (video) video.pause();
+              }
+            });
+          });
+        
+          if (closeModal) {
+            closeModal.addEventListener("click", function() {
+              modal.style.display = "none";
+              modalVideo.pause();
+            });
+          }
+        
+          window.addEventListener("click", function(event) {
+            if (event.target === modal) {
+              modal.style.display = "none";
+              modalVideo.pause();
+            }
+          });
+        }
+        
+        // دالة عداد الأرقام
+        function setupStatsCounter() {
+          const statNumbers = document.querySelectorAll(".stat-number");
+          statNumbers.forEach(stat => {
+            const target = parseInt(stat.getAttribute("data-target"));
+            const suffix = stat.getAttribute("data-suffix") || "";
+            const increment = target / 100;
+            let current = 0;
+        
+            const updateCounter = () => {
+              current += increment;
+              if (current < target) {
+                stat.textContent = Math.ceil(current) + suffix;
+                requestAnimationFrame(updateCounter);
+              } else {
+                stat.textContent = target + suffix;
+              }
+            };
+        
+            const observer = new IntersectionObserver(entries => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  updateCounter();
+                  observer.unobserve(entry.target);
+                }
+              });
+            });
+        
+            observer.observe(stat);
+          });
+        }
+        
+        // تحميل كل شيء بعد ظهور الصفحة بالكامل
+        window.addEventListener("load", () => {
+          initializeMap();
+          setupProductModal();
+          setupStatsCounter();
+          document.getElementById("current-year").textContent = new Date().getFullYear();
+        });
+        </script>
+        
+
+    </div>
+</body>
+</html>
