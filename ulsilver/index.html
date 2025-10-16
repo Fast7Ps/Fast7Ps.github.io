@@ -12,9 +12,11 @@
   <meta name="theme-color" content="#ec4899" />
   <link rel="icon" type="image/png" href="ass/img/logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="ass/css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
   /* Header والخلفيات */
 .map-header,
@@ -218,61 +220,93 @@
 
 
 
-/* 🎵 تصميم متجاوب ومناسب للهواتف */
+/* General Styling & Player Container */
 .audio-player-container {
   position: fixed;
   bottom: 15px;
   right: 15px;
   z-index: 1000;
-  max-width: 90%;
+  max-width: fit-content;
+  display: flex;
+  align-items: center;
+  border-radius: 12px;
+  padding: 10px 15px;
+  gap: 15px; /* Space between play button and volume control */
+  transition: all .3s 
+cubic-bezier(.4, 0, .2, 1);
+    animation: float 3s 
+ease-in-out infinite;
+
 }
 
+
+
+
+/* Play/Pause Toggle Button */
 .audio-toggle-btn {
-  background: rgba(255, 255, 255, 0.95);
+  background: linear-gradient(135deg, #10b981, #0a8f6a);
   border: none;
-  width: 60px;
-  height: 60px;
+  width: 55px;
+  height: 55px;
   border-radius: 50%;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  margin: 0 auto;
+  color: #fff;
+  font-size: 22px;
+  flex-shrink: 0;
+  width: 4rem;
+  height: 4rem;
 }
 
 .audio-toggle-btn:hover {
-  background: rgba(255, 255, 255, 1);
-  transform: scale(1.05);
+  transform: scale(1.1);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+}
+
+.audio-toggle-btn.playing {
+  background: linear-gradient(135deg, #ef4444, #dc2626); /* Different color when playing */
 }
 
 .audio-toggle-btn i {
-  font-size: 24px;
-  color: #333;
+  color: inherit;
 }
 
-.audio-toggle-btn.playing i {
-  color: #10b981;
-}
-
-/* شريط التحكم في الصوت */
+/* Volume Control Container */
 .volume-control {
-  margin-top: 10px;
-  width: 100%;
+  width: 150px; /* Fixed width for the volume slider */
   display: flex;
+  flex-direction: column;
   align-items: center;
+  position: relative;
+  height: 100%;
   justify-content: center;
+  opacity: 0; /* Start hidden */
+  pointer-events: none; /* Disable interaction when hidden */
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: translateX(10px); /* Slight shift when hidden */
 }
 
+.volume-control.show {
+  opacity: 1; /* Show when 'show' class is added */
+  pointer-events: all; /* Enable interaction */
+  transform: translateX(0); /* Return to original position */
+}
+
+/* Volume Slider */
 #volume-slider {
+  appearance: none;
+  -webkit-appearance: none;
   width: 100%;
   height: 8px;
-  background: #ddd;
+  background: #e0e0e0;
   border-radius: 4px;
   outline: none;
-  -webkit-appearance: none;
   cursor: pointer;
+  margin: 0;
 }
 
 #volume-slider::-webkit-slider-thumb {
@@ -281,8 +315,13 @@
   height: 24px;
   background: #10b981;
   border-radius: 50%;
-  cursor: pointer;
-  border: none;
+  border: 4px solid #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: background 0.3s ease;
+}
+
+#volume-slider::-webkit-slider-thumb:hover {
+  background: #0a8f6a;
 }
 
 #volume-slider::-moz-range-thumb {
@@ -290,76 +329,114 @@
   height: 24px;
   background: #10b981;
   border-radius: 50%;
-  cursor: pointer;
-  border: none;
+  border: 4px solid #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: background 0.3s ease;
 }
 
-/* الرسالة المنبثقة */
+#volume-slider::-moz-range-thumb:hover {
+  background: #0a8f6a;
+}
+
+/* Audio Status Pop-up Message */
 #audio-status {
   position: fixed;
-  bottom: 90px;
+  bottom: 85px; /* Position above the player */
   right: 20px;
-  background: rgba(255, 255, 255, 0.95);
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 13px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  background: rgba(255,255,255,0.98);
+  padding: 10px 15px;
+  border-radius: 10px;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   display: none;
+  color: #333;
 }
 
-/* تحسين للشاشات الصغيرة */
-@media screen and (max-width: 480px) {
+/* Volume Percentage Bubble */
+#volume-bubble {
+  position: absolute;
+  top: -25px; /* Above the slider */
+  left: 50%;
+  transform: translateX(-50%);
+  background: #10b981;
+  color: #fff;
+  font-weight: bold;
+  padding: 5px 8px;
+  border-radius: 8px;
+  font-size: 13px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  min-width: 40px;
+  text-align: center;
+}
+
+#volume-bubble.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-5px); /* Slightly move up when shown */
+}
+
+/* Media Queries for Responsiveness */
+@media screen and (max-width: 768px) {
   .audio-player-container {
-    right: 10px;
-    bottom: 10px;
+    padding: 8px 10px;
+    gap: 10px;
   }
-  
   .audio-toggle-btn {
-    width: 55px;
-    height: 55px;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
   }
-  
-  .audio-toggle-btn i {
-    font-size: 22px;
+  .volume-control {
+    width: 120px;
   }
-  
   #volume-slider {
     height: 6px;
   }
-  
-  #volume-slider::-webkit-slider-thumb {
-    width: 20px;
-    height: 20px;
-  }
-  
+  #volume-slider::-webkit-slider-thumb,
   #volume-slider::-moz-range-thumb {
     width: 20px;
     height: 20px;
+    border: 3px solid #fff;
+  }
+  #audio-status {
+    bottom: 75px;
+    right: 15px;
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+  #volume-bubble {
+    top: -20px;
+    font-size: 12px;
+    padding: 4px 7px;
   }
 }
+
+
   </style>
 </head>
 <body>
 
-<!-- 🎧 مشغل الموسيقى -->
+
+<!-- Audio Player -->
 <div class="audio-player-container">
   <audio id="bg-music" loop>
-    <source src="ass/music/uls.mp3" type="audio/mpeg">
-    متصفحك لا يدعم تشغيل الملفات الصوتية.
+      <source src="ass/music/uls.mp3" type="audio/mpeg">
+      متصفحك لا يدعم تشغيل الملفات الصوتية.
   </audio>
-  
-  <button id="audio-toggle" class="audio-toggle-btn">
-    <i class="fas fa-music"></i>
+
+  <button id="audio-toggle" class="audio-toggle-btn" style="transform: scale(1.1) rotate(5deg);">
+      <i class="fas fa-music"></i> <!-- أيقونة الموسيقى الافتراضية -->
   </button>
-  
-  <div class="volume-control" id="volume-control" style="display: none;">
-    <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.5">
+
+  <div class="volume-control" id="volume-control">
+      <div id="volume-bubble"></div> <!-- فقاعة نسبة الصوت -->
+      <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.5">
   </div>
-  
-  <div id="audio-status"></div>
+
+  <div id="audio-status"></div> <!-- رسالة الحالة المنبثقة -->
 </div>
 
-  
     <div class="bg-pattern"></div>
 
     <div class="container" id="main-content">
@@ -846,79 +923,128 @@ window.addEventListener('load', () => {
   const volumeControl = document.getElementById('volume-control');
   const volumeSlider = document.getElementById('volume-slider');
   const audioStatus = document.getElementById('audio-status');
+  const volumeBubble = document.getElementById('volume-bubble');
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
   audio.volume = 0.5;
   volumeSlider.value = 0.5;
 
-  // دالة عرض الرسالة المؤقتة
+  let volumeControlHideTimeout; // To store the timeout ID for hiding volume control
+
   function showStatus(msg) {
     audioStatus.textContent = msg;
     audioStatus.style.display = 'block';
-    setTimeout(() => {
-      audioStatus.style.display = 'none';
-    }, 4000);
+    setTimeout(() => audioStatus.style.display = 'none', 4000);
   }
 
-  // محاولة التشغيل التلقائي
+  function showVolumeBubble(value) {
+    volumeBubble.textContent = value + '%';
+    volumeBubble.classList.add('show');
+    clearTimeout(volumeBubble.hideTimeout);
+    volumeBubble.hideTimeout = setTimeout(() => {
+      volumeBubble.classList.remove('show');
+    }, 1500);
+  }
+
+  // Function to show the volume control
+  function showVolumeControl() {
+    clearTimeout(volumeControlHideTimeout); // Clear any existing hide timeout
+    volumeControl.classList.add('show');
+    // Set a new timeout to hide the volume control after 5 seconds of inactivity
+    volumeControlHideTimeout = setTimeout(() => {
+      if (!audio.paused) { // Only hide if music is still playing
+         volumeControl.classList.remove('show');
+      }
+    }, 5000); // 5 seconds
+  }
+
+  // Function to hide the volume control
+  function hideVolumeControl() {
+    clearTimeout(volumeControlHideTimeout); // Clear any hide timeout
+    volumeControl.classList.remove('show');
+  }
+
+  // Initial attempt to autoplay or show instructions
   function tryAutoPlay() {
     if (isIOS) {
       showStatus('اضغط على الأيقونة لتشغيل الموسيقى 🔊 (التحكم بالصوت عبر أزرار الجهاز)');
-      volumeControl.style.display = 'flex'; // نظهر الشريط شكليًا
+      // For iOS, always show the volume control, but disable interaction
+      volumeControl.classList.add('show');
+      volumeControl.style.pointerEvents = 'none';
+      volumeSlider.disabled = true;
     } else {
       audio.play().then(() => {
         toggleBtn.classList.add('playing');
         toggleBtn.querySelector('i').className = 'fas fa-pause';
-        volumeControl.style.display = 'flex';
-      }).catch(() => {
-        showStatus('اضغط على الأيقونة لتشغيل الموسيقى 🎵');
-      });
+        showVolumeControl(); // Show volume control on successful autoplay
+      }).catch(() => showStatus('اضغط على الأيقونة لتشغيل الموسيقى 🎵'));
     }
   }
-
   tryAutoPlay();
 
-  // زر التشغيل والإيقاف
+  // Event listener for play/pause button
   toggleBtn.addEventListener('click', function() {
     if (audio.paused) {
       audio.play().then(() => {
         toggleBtn.classList.add('playing');
         toggleBtn.querySelector('i').className = 'fas fa-pause';
-        volumeControl.style.display = 'flex';
-        audioStatus.style.display = 'none';
-      }).catch(() => {
-        showStatus('تعذّر تشغيل الصوت، اضغط مجددًا');
-      });
+        showVolumeControl(); // Show volume control when playback starts
+        audioStatus.style.display = 'none'; // Hide status message if music plays
+      }).catch(() => showStatus('تعذّر تشغيل الصوت، اضغط مجددًا'));
     } else {
       audio.pause();
       toggleBtn.classList.remove('playing');
       toggleBtn.querySelector('i').className = 'fas fa-music';
-      volumeControl.style.display = 'none';
+      hideVolumeControl(); // Hide volume control when paused
+      if (isIOS) { // On iOS, indicate volume control is via device buttons
+        showStatus('تحكم في الصوت عبر أزرار الجهاز 🔈');
+      }
     }
   });
 
-  // التحكم في الصوت (Android & Windows)
+  // Volume slider functionality (for non-iOS devices)
   if (!isIOS) {
     volumeSlider.addEventListener('input', function() {
       audio.volume = parseFloat(this.value);
+      const percentage = Math.round(this.value * 100);
+      showVolumeBubble(percentage);
       localStorage.setItem('audioVolume', this.value);
+      showVolumeControl(); // Reset hide timeout on interaction with slider
     });
 
+    // Event listeners to keep volume control visible on hover/touch
+    volumeControl.addEventListener('mouseenter', showVolumeControl);
+    volumeControl.addEventListener('mouseleave', () => {
+        if (!audio.paused) {
+            volumeControlHideTimeout = setTimeout(() => {
+                volumeControl.classList.remove('show');
+            }, 1000); // Faster hide after mouse leaves
+        }
+    });
+    volumeControl.addEventListener('touchstart', showVolumeControl);
+    volumeControl.addEventListener('touchend', () => {
+        if (!audio.paused) {
+            volumeControlHideTimeout = setTimeout(() => {
+                volumeControl.classList.remove('show');
+            }, 2000); // Slightly longer hide for touch
+        }
+    });
+
+    // Load saved volume
     const savedVolume = localStorage.getItem('audioVolume');
     if (savedVolume) {
       audio.volume = parseFloat(savedVolume);
       volumeSlider.value = savedVolume;
     }
   } else {
-    // في iOS: عرض رسالة عند محاولة تغيير الصوت
+    // For iOS, the slider is mostly for display (volume controlled by device)
     volumeSlider.addEventListener('input', () => {
       showStatus('تحكم في الصوت عبر أزرار الجهاز 🔈');
+      // On iOS, audio.volume might not update immediately from slider input
+      // so we show the current actual volume from the audio object.
+      showVolumeBubble(Math.round(audio.volume * 100));
     });
-  }
-
-  // تحسين للشاشات الصغيرة
-  if (window.innerWidth < 768 && !isIOS) {
-    volumeControl.style.width = '90%';
+    // For iOS, as established in tryAutoPlay(), the volumeControl is always shown but disabled
   }
 });
           </script>
