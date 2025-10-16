@@ -213,9 +213,106 @@
 }
 
 
+
+
+
+
+
+/* نمط الطبقة المنبثقة للصوت */
+.audio-player-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.audio-toggle-btn {
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.audio-toggle-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.05);
+}
+
+.audio-toggle-btn i {
+  font-size: 20px;
+  color: #333;
+}
+
+.audio-toggle-btn.playing i {
+  color: #10b981;
+}
+
+.volume-control {
+  margin-top: 10px;
+  width: 100px;
+  display: flex;
+  align-items: center;
+}
+
+#volume-slider {
+  width: 100%;
+  height: 5px;
+  background: #ddd;
+  border-radius: 3px;
+  outline: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+#volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  background: #10b981;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#volume-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: #10b981;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
   </style>
 </head>
 <body>
+
+<!-- Audio Player -->
+<div class="audio-player-container">
+  <audio id="bg-music" loop>
+    <source src="ass/music/uls.mp3" type="audio/mpeg">
+    متصفحك لا يدعم تشغيل الملفات الصوتية.
+  </audio>
+  
+  <button id="audio-toggle" class="audio-toggle-btn">
+    <i class="fas fa-music"></i>
+  </button>
+  
+  <div class="volume-control" id="volume-control" style="display: none;">
+    <input type="range" id="volume-slider" min="0" max="100" value="50">
+  </div>
+  
+  <!-- رسالة بسيطة إذا فشل التشغيل التلقائي -->
+  <div id="audio-status" style="position: fixed; bottom: 90px; right: 20px; background: rgba(255, 255, 255, 0.9); padding: 8px 12px; border-radius: 5px; font-size: 12px; display: none;">
+    اضغط على الأيقونة لتشغيل الموسيقى
+  </div>
+</div>
+  
     <div class="bg-pattern"></div>
 
     <div class="container" id="main-content">
@@ -695,7 +792,60 @@ window.addEventListener('load', () => {
           document.getElementById("current-year").textContent = new Date().getFullYear();
         });
         </script>
-        
+        <script>
+      document.addEventListener('DOMContentLoaded', function() {
+  const audio = document.getElementById('bg-music');
+  const toggleBtn = document.getElementById('audio-toggle');
+  const volumeControl = document.getElementById('volume-control');
+  const volumeSlider = document.getElementById('volume-slider');
+  const audioStatus = document.getElementById('audio-status');
+  
+  // تعيين مستوى الصوت الافتراضي
+  audio.volume = 0.5;
+  
+  // محاولة تشغيل الصوت تلقائياً
+  function tryAutoPlay() {
+    audio.play().then(() => {
+      toggleBtn.classList.add('playing');
+      toggleBtn.querySelector('i').className = 'fas fa-pause';
+      volumeControl.style.display = 'block';
+    }).catch(error => {
+      console.log('Autoplay prevented:', error);
+      // إذا فشل التشغيل التلقائي، أظهر رسالة صغيرة
+      audioStatus.style.display = 'block';
+      // إخفاء الرسالة بعد 5 ثوان
+      setTimeout(() => {
+        audioStatus.style.display = 'none';
+      }, 5000);
+    });
+  }
+  
+  // عند تحميل الصفحة، حاول تشغيل الصوت
+  tryAutoPlay();
+  
+  // عند النقر على أيقونة الصوت
+  toggleBtn.addEventListener('click', function() {
+    if (audio.paused) {
+      audio.play().then(() => {
+        toggleBtn.classList.add('playing');
+        toggleBtn.querySelector('i').className = 'fas fa-pause';
+        volumeControl.style.display = 'block';
+        audioStatus.style.display = 'none';
+      });
+    } else {
+      audio.pause();
+      toggleBtn.classList.remove('playing');
+      toggleBtn.querySelector('i').className = 'fas fa-music';
+      volumeControl.style.display = 'none';
+    }
+  });
+  
+  // التحكم في مستوى الصوت
+  volumeSlider.addEventListener('input', function() {
+    audio.volume = this.value / 100;
+  });
+});
+          </script>
 
     </div>
 </body>
