@@ -256,6 +256,8 @@ ease-in-out infinite;
   flex-shrink: 0; /* Prevent button from shrinking */
   width: 4rem;
     height: 4rem;
+    bottom: 2rem;
+        left: 2rem;
 }
 
 .audio-toggle-btn:hover {
@@ -281,10 +283,10 @@ ease-in-out infinite;
   height: 100%;
   justify-content: center;
   
-  /* Initial hidden state, controlled by JavaScript via 'hidden' class */
-  opacity: 1; /* Default to visible in CSS, JS will apply 'hidden' */
-  pointer-events: all; /* Default to interactive, JS will change */
-  transform: translateX(0); /* Default position */
+  /* Default visibility and interactivity, will be overridden by .hidden or JS */
+  opacity: 1; 
+  pointer-events: all;
+  transform: translateX(0);
   transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth transition */
 }
 
@@ -917,156 +919,133 @@ window.addEventListener('load', () => {
         </script>
         <script>
      document.addEventListener('DOMContentLoaded', function() {
-  const audio = document.getElementById('bg-music');
-  const toggleBtn = document.getElementById('audio-toggle');
-  const volumeControl = document.getElementById('volume-control');
-  const volumeSlider = document.getElementById('volume-slider');
-  const audioStatus = document.getElementById('audio-status');
-  const volumeBubble = document.getElementById('volume-bubble');
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const audio = document.getElementById('bg-music');
+    const toggleBtn = document.getElementById('audio-toggle');
+    const volumeControl = document.getElementById('volume-control');
+    const volumeSlider = document.getElementById('volume-slider');
+    const audioStatus = document.getElementById('audio-status');
+    const volumeBubble = document.getElementById('volume-bubble');
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
-  // Initialize audio volume and slider position
-  audio.volume = 0.5;
-  volumeSlider.value = 0.5;
+    audio.volume = 0.5;
+    volumeSlider.value = 0.5;
 
-  let volumeControlHideTimeout; // To store the timeout ID for hiding volume control
+    let volumeControlHideTimeout; // لتخزين معرف المؤقت لإخفاء التحكم بالصوت
 
-  // --- Utility Functions ---
+    // --- Utility Functions ---
 
-  function showStatus(msg) {
-    audioStatus.textContent = msg;
-    audioStatus.style.display = 'block';
-    setTimeout(() => audioStatus.style.display = 'none', 4000); // Hide after 4 seconds
-  }
+    function showStatus(msg) {
+        audioStatus.textContent = msg;
+        audioStatus.style.display = 'block';
+        setTimeout(() => audioStatus.style.display = 'none', 4000); // إخفاء بعد 4 ثوانٍ
+    }
 
-  function showVolumeBubble(value) {
-    volumeBubble.textContent = value + '%';
-    volumeBubble.classList.add('show');
-    clearTimeout(volumeBubble.hideTimeout); // Clear previous bubble hide timeout
-    volumeBubble.hideTimeout = setTimeout(() => {
-      volumeBubble.classList.remove('show');
-    }, 1500); // Hide bubble after 1.5 seconds
-  }
+    function showVolumeBubble(value) {
+        volumeBubble.textContent = value + '%';
+        volumeBubble.classList.add('show');
+        clearTimeout(volumeBubble.hideTimeout); // مسح أي مؤقت إخفاء فقاعة سابق
+        volumeBubble.hideTimeout = setTimeout(() => {
+            volumeBubble.classList.remove('show');
+        }, 1500); // إخفاء الفقاعة بعد 1.5 ثانية
+    }
 
-  // --- Volume Control Visibility Logic ---
+    // --- Volume Control Visibility Logic ---
 
-  function showVolumeControl() {
-    clearTimeout(volumeControlHideTimeout); // Clear any existing hide timeout
-    volumeControl.classList.remove('hidden'); // Show the volume control
+    // وظيفة لتعيين الرؤية وإدارة الإخفاء التلقائي لجميع الأجهزة (بما في ذلك iOS الآن)
+    function setVolumeControlVisibility(isVisible) {
+        clearTimeout(volumeControlHideTimeout); // مسح أي مؤقت إخفاء موجود
 
-    // Set a new timeout to hide the volume control after 5 seconds of inactivity
-    // This timer only applies to non-iOS devices
-    if (!isIOS) {
-        volumeControlHideTimeout = setTimeout(() => {
-            if (!audio.paused) { // Only hide if music is still playing
-                volumeControl.classList.add('hidden'); // Hide the volume control
+        if (isVisible) {
+            volumeControl.classList.remove('hidden'); // إظهار التحكم بالصوت
+            // تعيين مؤقت الإخفاء التلقائي فقط إذا كانت الموسيقى قيد التشغيل
+            if (!audio.paused) {
+                volumeControlHideTimeout = setTimeout(() => {
+                    volumeControl.classList.add('hidden'); // إخفاء التحكم بالصوت
+                }, 5000); // 5 ثوانٍ
             }
-        }, 5000); // 5 seconds
+        } else {
+            // إذا كان سيتم الإخفاء، اخفِ دائمًا (على سبيل المثال، عند الإيقاف المؤقت/التوقف)
+            volumeControl.classList.add('hidden');
+        }
     }
-  }
 
-  function hideVolumeControl() {
-    clearTimeout(volumeControlHideTimeout); // Clear any hide timeout
-    volumeControl.classList.add('hidden'); // Hide the volume control
-  }
+    // --- Initial Setup and Autoplay Attempt ---
 
-  // --- Initial Setup and Autoplay Attempt ---
-
-  function tryAutoPlay() {
-    if (isIOS) {
-      // On iOS, autoplay is restricted and volume control is via device buttons.
-      // We make the volume control always visible but inform the user.
-      showStatus('اضغط على الأيقونة لتشغيل الموسيقى 🔊 (التحكم بالصوت عبر أزرار الجهاز)');
-      volumeControl.classList.remove('hidden'); // Ensure volume control is visible on iOS
-      // On iOS, the slider can still be visually moved, but it won't affect the audio.
-      // We keep it enabled so the user can interact, and the status message guides them.
-      // We don't need to disable `pointer-events` for the container either.
-    } else {
-      // Attempt autoplay for non-iOS devices
-      audio.play().then(() => {
-        toggleBtn.classList.add('playing');
-        toggleBtn.querySelector('i').className = 'fas fa-pause';
-        showVolumeControl(); // Show volume control on successful autoplay
-      }).catch(() => {
-        // Autoplay failed (e.g., muted autoplay allowed, but full autoplay requires user interaction)
-        showStatus('اضغط على الأيقونة لتشغيل الموسيقى 🎵');
-        hideVolumeControl(); // Keep it hidden until user interaction
-      });
+    function tryAutoPlay() {
+        // محاولة التشغيل التلقائي لجميع الأجهزة
+        audio.play().then(() => {
+            toggleBtn.classList.add('playing');
+            toggleBtn.querySelector('i').className = 'fas fa-pause';
+            setVolumeControlVisibility(true); // إظهار التحكم بالصوت عند التشغيل التلقائي الناجح
+            // على iOS، لا تزال تبلغ عن أزرار الجهاز، ولكن شريط التمرير سيكون موجودًا أيضًا.
+            if (isIOS) {
+                 showStatus('اضغط على الأيقونة لتشغيل الموسيقى 🔊 (التحكم الأساسي بالصوت عبر أزرار الجهاز)');
+            }
+        }).catch(() => {
+            // فشل التشغيل التلقائي (على سبيل المثال، التشغيل التلقائي الصامت مسموح به، ولكن التشغيل التلقائي الكامل يتطلب تفاعل المستخدم)
+            showStatus('اضغط على الأيقونة لتشغيل الموسيقى 🎵');
+            setVolumeControlVisibility(false); // إبقائه مخفيًا حتى تفاعل المستخدم
+        });
     }
-  }
-  tryAutoPlay();
+    tryAutoPlay();
 
-  // --- Event Listeners ---
+    // --- Event Listeners ---
 
-  toggleBtn.addEventListener('click', function() {
-    if (audio.paused) {
-      audio.play().then(() => {
-        toggleBtn.classList.add('playing');
-        toggleBtn.querySelector('i').className = 'fas fa-pause';
-        showVolumeControl(); // Show volume control when playback starts
-        audioStatus.style.display = 'none'; // Hide status message if music plays
-      }).catch(() => showStatus('تعذّر تشغيل الصوت، اضغط مجددًا'));
-    } else {
-      audio.pause();
-      toggleBtn.classList.remove('playing');
-      toggleBtn.querySelector('i').className = 'fas fa-music';
-      // Hide volume control only on non-iOS devices when paused
-      if (!isIOS) {
-          hideVolumeControl();
-      }
-      showStatus('تم إيقاف الموسيقى'); // Show message when paused
-    }
-  });
+    toggleBtn.addEventListener('click', function() {
+        if (audio.paused) {
+            audio.play().then(() => {
+                toggleBtn.classList.add('playing');
+                toggleBtn.querySelector('i').className = 'fas fa-pause';
+                setVolumeControlVisibility(true); // إظهار (يُخفى تلقائيًا بعد تأخير)
+                audioStatus.style.display = 'none'; // إخفاء رسالة الحالة إذا تم تشغيل الموسيقى
+            }).catch(() => showStatus('تعذّر تشغيل الصوت، اضغط مجددًا'));
+        } else {
+            audio.pause();
+            toggleBtn.classList.remove('playing');
+            toggleBtn.querySelector('i').className = 'fas fa-music';
+            setVolumeControlVisibility(false); // إخفاء عند الإيقاف المؤقت
+            showStatus('تم إيقاف الموسيقى'); // إظهار رسالة عند الإيقاف المؤقت
+        }
+    });
 
-  // Volume slider functionality (for non-iOS devices)
-  if (!isIOS) {
+    // وظيفة شريط تمرير الصوت لجميع الأجهزة
     volumeSlider.addEventListener('input', function() {
-      audio.volume = parseFloat(this.value);
-      const percentage = Math.round(this.value * 100);
-      showVolumeBubble(percentage);
-      localStorage.setItem('audioVolume', this.value);
-      showVolumeControl(); // Reset hide timeout on interaction with slider
+        audio.volume = parseFloat(this.value);
+        const percentage = Math.round(this.value * 100);
+        showVolumeBubble(percentage);
+        localStorage.setItem('audioVolume', this.value);
+        setVolumeControlVisibility(true); // إعادة تعيين مؤقت الإخفاء عند التفاعل مع شريط التمرير
+
+        if (isIOS) {
+            // لا تزال تظهر تذكيرًا على iOS بأن أزرار الجهاز هي الأساسية
+            showStatus('تحكم في الصوت عبر أزرار الجهاز 🔈 (الشريط للمزامنة البصرية)');
+        }
     });
 
-    // Event listeners to keep volume control visible on hover/touch interaction
-    volumeControl.addEventListener('mouseenter', showVolumeControl);
+    // معالجات الأحداث للحفاظ على التحكم في الصوت مرئيًا عند التمرير/اللمس لجميع الأجهزة
+    volumeControl.addEventListener('mouseenter', () => setVolumeControlVisibility(true));
     volumeControl.addEventListener('mouseleave', () => {
-        if (!audio.paused) { // Only attempt to hide if music is playing
+        if (!audio.paused) { // محاولة الإخفاء فقط إذا كانت الموسيقى قيد التشغيل
             volumeControlHideTimeout = setTimeout(() => {
-                volumeControl.classList.add('hidden'); // Hide faster after mouse leaves
-            }, 1000);
+                setVolumeControlVisibility(false);
+            }, 1000); // إخفاء بشكل أسرع بعد مغادرة الماوس
         }
     });
-    volumeControl.addEventListener('touchstart', showVolumeControl); // Mobile touch start
-    volumeControl.addEventListener('touchend', () => { // Mobile touch end
-        if (!audio.paused) { // Only attempt to hide if music is playing
+    volumeControl.addEventListener('touchstart', () => setVolumeControlVisibility(true));
+    volumeControl.addEventListener('touchend', () => {
+        if (!audio.paused) { // محاولة الإخفاء فقط إذا كانت الموسيقى قيد التشغيل
             volumeControlHideTimeout = setTimeout(() => {
-                volumeControl.classList.add('hidden'); // Hide slightly longer for touch
-            }, 2000);
+                setVolumeControlVisibility(false);
+            }, 2000); // أطول قليلاً لأجهزة اللمس
         }
     });
 
-    // Load saved volume preference from local storage
+    // تحميل تفضيل الصوت المحفوظ من التخزين المحلي
     const savedVolume = localStorage.getItem('audioVolume');
     if (savedVolume) {
-      audio.volume = parseFloat(savedVolume);
-      volumeSlider.value = savedVolume;
+        audio.volume = parseFloat(savedVolume);
+        volumeSlider.value = savedVolume;
     }
-  } else {
-    // --- iOS Specific Logic ---
-    // On iOS, the slider is visually present, but actual volume control is via device buttons.
-    volumeSlider.addEventListener('input', () => {
-      // Provide user feedback that volume is controlled externally
-      showStatus('تحكم في الصوت عبر أزرار الجهاز 🔈');
-      // Update bubble with current actual volume from audio object, not slider value
-      showVolumeBubble(Math.round(audio.volume * 100));
-      // Keep volume control visible on iOS during interaction
-      showVolumeControl(); // Reset timeout (though it won't auto-hide on iOS)
-    });
-    
-    // Ensure the volume control is always visible for iOS
-    volumeControl.classList.remove('hidden'); 
-  }
 });
           </script>
 
